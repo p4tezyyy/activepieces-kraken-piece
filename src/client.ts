@@ -5,6 +5,8 @@ export interface Credentials {
   spotKey?: string; spotSecret?: string;
   futuresKey?: string; futuresSecret?: string;
   futuresDemo?: boolean;
+  spotApi2fa?: boolean;
+  defaultWorkspace?: string;
 }
 export type Transport = typeof fetch;
 const queues = new Map<string, Promise<unknown>>();
@@ -43,10 +45,11 @@ export function objectParams(value: unknown): Params {
   }
   return result;
 }
-export function encodeParams(params: Params): string {
+export function encodeParams(params: Params, repeatArrays = false): string {
   const encoded = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
     if (value === undefined || value === null) continue;
+    if (repeatArrays && Array.isArray(value)) { for (const item of value) encoded.append(key, String(item)); continue; }
     encoded.append(key, typeof value === 'object' ? JSON.stringify(value) : String(value));
   }
   return encoded.toString();
@@ -108,7 +111,7 @@ export class KrakenClient {
     if (!['GET', 'POST', 'PUT', 'DELETE'].includes(method)) throw new Error('Unsupported HTTP method.');
     const base = this.auth.futuresDemo ? 'https://demo-futures.kraken.com' : 'https://futures.kraken.com';
     const path = `/${prefix}/${endpoint}`;
-    const body = encodeParams(params);
+    const body = encodeParams(params, true);
     const request = async () => {
       const headers: Record<string, string> = {};
       if (authenticated) {

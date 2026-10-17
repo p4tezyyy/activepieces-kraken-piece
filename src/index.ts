@@ -4,6 +4,7 @@ import { executeCli, CliCommand, advancedCliCommand } from './cli';
 import { pollHistory, PollState } from './poll';
 import endpoints from './endpoints.json';
 import catalog from './catalog.json';
+import { actionFields, fieldProperty, fieldLabel, nativeParams, inputSchemas, FieldSchema, normalizeField } from './forms';
 
 const secret = (displayName: string) => PieceAuth.SecretText({ displayName, required: false });
 export const krakenAuth = PieceAuth.CustomAuth({
@@ -13,6 +14,8 @@ export const krakenAuth = PieceAuth.CustomAuth({
     spotKey: secret('Spot API Key'), spotSecret: secret('Spot API Secret'),
     futuresKey: secret('Futures API Key'), futuresSecret: secret('Futures API Secret'),
     futuresDemo: Property.Checkbox({ displayName: 'Use Futures Demo Environment', required: false, defaultValue: false }),
+    spotApi2fa: Property.Checkbox({ displayName: 'My Spot API key requires a 2FA code', description: 'Leave off unless you explicitly enabled API-key 2FA in Kraken. This is separate from your Kraken website login.', required: false, defaultValue: false }),
+    defaultWorkspace: Property.ShortText({ displayName: 'Default paper trading account (optional)', description: 'A named CLI workspace for paper trading actions, such as my-strategy. Leave empty to use the CLI default. This does not select a Kraken subaccount.', required: false }),
   },
   async validate({ auth }) {
     if (!!auth.spotKey !== !!auth.spotSecret || !!auth.futuresKey !== !!auth.futuresSecret) return { valid: false, error: 'Supply both key and secret for each enabled API.' };
@@ -35,26 +38,49 @@ function assertChanges(allow: unknown) { if (allow !== true) throw new Error('En
 
 const nativeActions = endpoints.map(def => {
   const props: InputPropertyMap = {};
-  for (const field of def.fields) props[field] = text(field);
-  props.parameters = paramsProp();
-  props.otp = Property.ShortText({ displayName: 'One-Time Password', description: 'Only for Spot keys with API 2FA enabled. Use a fresh code.', required: false });
+  const fields = actionFields(def);
+  const primary = fields.filter(field => field.schema.required || def.fields.includes(field.key) || fields.length <= 6);
+  primary.sort((a, b) => {
+    const rank = (key: string) => { const i = def.fields.indexOf(key); return i < 0 ? 100 : i; };
+    return rank(a.key) - rank(b.key);
+  });
+  const secondary = fields.filter(field => !primary.includes(field));
+  const family = def.endpoint.startsWith('Withdraw') ? 'withdrawal' : def.family;
+  for (const field of primary) props[field.key] = fieldProperty(field.key.split('__').at(-1)!, field.schema, family, krakenAuth);
+  if (secondary.length) props.showAdvanced = Property.Checkbox({ displayName: 'Show optional settings', description: 'Add filters, pagination, order flags and other optional fields.', required: false, defaultValue: false });
+  if (secondary.length || (def.private && def.family === 'spot')) {
+    props.advancedInputs = Property.DynamicProperties({ auth: krakenAuth, displayName: 'Optional settings', required: false, refreshers: ['showAdvanced', 'auth', 'asset'],
+      props: async (values) => {
+        const extra: InputPropertyMap = {};
+        if (values.showAdvanced) for (const field of secondary) extra[field.key] = fieldProperty(field.key.split('__').at(-1)!, field.schema, family, krakenAuth);
+        if (def.private && def.family === 'spot' && credentials(values.auth).spotApi2fa) {
+          extra.otp = Property.ShortText({ displayName: 'Current API 2FA code', description: 'A fresh one-time code for this API key. Map it from your preceding step. Required only because this connection has API-key 2FA enabled.', required: true });
+        }
+        return extra;
+      },
+    });
+  }
   if (def.write) props.allowChanges = allowChanges();
   return createAction({
     auth: krakenAuth, requireAuth: def.private,
     name: `${def.family}_${slug(def.name)}`,
     displayName: `${def.family === 'spot' ? 'Spot' : 'Futures'}: ${def.name}`,
-    description: `${def.write ? 'Changes account state. ' : ''}${def.family === 'spot' ? '/0/' + (def.private ? 'private/' : 'public/') : '/derivatives/api/v3/'}${def.endpoint}. Returns Kraken data with decimal strings preserved.`,
+    description: `${inputSchemas[def.family + ':' + def.name].description}. Fill in the fields or map values from earlier steps.${def.write ? ' This action changes your Kraken account.' : ''}`,
     props,
     async run(context) {
       if (def.write) assertChanges(context.propsValue.allowChanges);
-      const params = objectParams(context.propsValue.parameters);
-      for (const field of def.fields) if (context.propsValue[field] != null && context.propsValue[field] !== '') params[field] = context.propsValue[field];
-      if (context.propsValue.otp) params.otp = context.propsValue.otp;
+      const params = nativeParams(def, context.propsValue);
+      if (def.endpoint === 'AddOrder') {
+        if (params.ordertype !== 'market' && params.ordertype !== 'settle-position' && !params.price) throw new Error('Price is required for the selected order type. Enter it or map a price from an earlier step.');
+        if (['stop-loss-limit', 'take-profit-limit', 'trailing-stop-limit'].includes(String(params.ordertype)) && !params.price2) throw new Error('Secondary price is required for this order type.');
+      }
+      if (def.family === 'spot' && def.private && credentials(context.auth).spotApi2fa && !params.otp) throw new Error('This connection requires a current API 2FA code. Map it under Optional settings.');
       if (def.name === 'Validate Order') params.validate = true;
       if (def.endpoint === 'DepositAddresses') params.new = def.write;
       const client = new KrakenClient(credentials(context.auth));
       if (def.family === 'spot') {
-        const result = await client.spot(def.endpoint, params, def.private, def.json, def.binary);
+        const structuredBody = def.json || (def.private && Object.values(params).some(value => value !== null && typeof value === 'object'));
+        const result = await client.spot(def.endpoint, params, def.private, structuredBody, def.binary);
         if (def.binary && result?.base64) {
           const url = await context.files.write({ fileName: 'kraken-export.zip', data: Buffer.from(result.base64, 'base64') });
           return { file: url, contentType: result.contentType };
@@ -99,27 +125,65 @@ const excludedCli = new Set(['kraken setup', 'kraken shell', 'kraken auth set', 
 export const cliCommands = (catalog.commands as CliCommand[]).filter(c => !excludedCli.has(c.command));
 const cliActions = cliCommands.map(command => {
   const props: InputPropertyMap = {};
+  const streaming = ['websocket', 'futures-ws'].includes(command.group);
+  const paper = ['paper', 'futures-paper'].includes(command.group);
+  const routing = paper || ['trade', 'account'].includes(command.group);
+  const inputSchemasForCli: Record<string, FieldSchema> = {};
   for (const p of command.parameters) {
     const key = p.name.replace(/^--/, '').replace(/-/g, '_');
-    const common = { displayName: p.name.replace(/^--/, ''), description: p.description, required: p.required };
-    if (p.type.endsWith('[]')) props[key] = Property.Json({ ...common, description: (p.description ?? '') + ' Supply a JSON array.' });
-    else if (p.type === 'boolean') props[key] = Property.Checkbox({ ...common, defaultValue: false });
-    else if (p.values) props[key] = Property.StaticDropdown({ ...common, options: { options: p.values.map(value => ({ label: String(value), value })) } });
-    else props[key] = Property.ShortText(common);
+    let schema: FieldSchema = { type: p.type.endsWith('[]') ? 'array' : p.type === 'integer' ? 'integer' : p.type === 'boolean' ? 'boolean' : 'string', required: p.required, description: p.description,
+      ...(p.values ? { enum: p.values } : {}), ...(p.type.endsWith('[]') ? { items: { type: 'string' } } : {}) };
+    if (command.name === 'order-batch' && key === 'file') {
+      schema = inputSchemas['spot:Place Batch Orders'].fields.orders;
+    } else if (['futures-batch-order', 'futures-paper-batch-order'].includes(command.name) && key.toLowerCase() === 'json') {
+      schema = inputSchemas['futures:Batch Orders'].fields.json.properties!.batchOrder;
+    }
+    inputSchemasForCli[key] = schema;
+    props[key] = fieldProperty(key === 'file' && command.name === 'order-batch' ? 'orders' : key.toLowerCase() === 'json' ? 'batchOrder' : key, schema, command.group === 'futures' ? 'futures' : 'spot', krakenAuth);
   }
-  props.cliWorkspace = text('CLI Workspace', false);
-  props.cliSeconds = Property.Number({ displayName: 'Maximum Runtime (seconds)', required: true, defaultValue: 15 });
-  props.cliMaxEvents = Property.Number({ displayName: 'Maximum Stream Events', required: true, defaultValue: 10 });
-  props.allowChanges = allowChanges();
+  if (paper) props.paperAccount = Property.ShortText({ displayName: 'Paper trading account (optional)', description: 'Map the name returned by Create workspace, or enter an existing paper account name. Leave empty to use the default set in your connection.', required: false });
+  if (streaming) {
+    props.cliSeconds = Property.Number({ displayName: 'Listen for up to (seconds)', required: true, defaultValue: 15 });
+    props.cliMaxEvents = Property.Number({ displayName: 'Stop after this many events', required: true, defaultValue: 10 });
+  }
+  props.showAdvanced = Property.Checkbox({ displayName: 'Show optional settings', required: false, defaultValue: false });
+  props.advancedInputs = Property.DynamicProperties({ auth: krakenAuth, displayName: 'Optional settings', required: false, refreshers: ['showAdvanced', 'auth'],
+    props: async values => {
+      const extra: InputPropertyMap = {};
+      if (values.showAdvanced) {
+        if (!streaming) extra.cliSeconds = Property.Number({ displayName: 'Request timeout (seconds)', required: false, defaultValue: 15 });
+        if (routing && !paper) extra.cliWorkspace = Property.ShortText({ displayName: 'Run in a named paper account (optional)', description: 'Only set this to deliberately route the operation to an existing CLI workspace. Leave empty for your Kraken account.', required: false });
+      }
+      if (command.auth_required && command.group !== 'futures' && command.group !== 'futures-ws' && credentials(values.auth).spotApi2fa) extra.otp = Property.ShortText({ displayName: 'Current API 2FA code', description: 'Map a fresh code for this Spot API key.', required: true });
+      return extra;
+    },
+  });
+  if (command.dangerous || command.command.startsWith('kraken deposit addresses')) props.allowChanges = allowChanges();
   return createAction({
     auth: krakenAuth, requireAuth: command.auth_required,
     name: 'cli_' + slug(command.name), displayName: `CLI: ${command.command.replace(/^kraken /, '').replace(/ [<\[].*$/, '')}`,
-    description: command.description + ' Requires the self-hosted Kraken CLI Docker image. Streaming commands return a bounded event sample. File arguments refer to paths inside the container.',
+    description: command.description + (streaming ? ' Returns events up to the selected count or time limit.' : ''),
     props,
     async run(ctx) {
-      return executeCli(command, ctx.propsValue, credentials(ctx.auth), {
-        allowWrites: ctx.propsValue.allowChanges === true, workspace: ctx.propsValue.cliWorkspace as string | undefined,
-        seconds: Number(ctx.propsValue.cliSeconds), maxEvents: Number(ctx.propsValue.cliMaxEvents),
+      const inputs = { ...ctx.propsValue };
+      const extra = inputs.advancedInputs as Record<string, unknown> | undefined;
+      for (const [key, schema] of Object.entries(inputSchemasForCli)) {
+        // Old flows may still supply JSON strings or paths for these two CLI inputs.
+        if ((key === 'file' || key.toLowerCase() === 'json') && typeof inputs[key] === 'string') continue;
+        const value = normalizeField(inputs[key], schema, fieldLabel(key));
+        if (schema.required && value === undefined) throw new Error(`${fieldLabel(key)} is required. Enter it or map a value from an earlier step.`);
+        inputs[key] = value;
+      }
+      if (['futures-batch-order', 'futures-paper-batch-order'].includes(command.name)) {
+        const key = command.name === 'futures-paper-batch-order' ? 'JSON' : 'json';
+        if (Array.isArray(inputs[key])) inputs[key] = JSON.stringify({ batchOrder: inputs[key] });
+      }
+      const creds = credentials(ctx.auth);
+      const otp = (extra?.otp ?? inputs.otp) as string | undefined;
+      if (command.auth_required && !['futures', 'futures-ws'].includes(command.group) && creds.spotApi2fa && !otp) throw new Error('This connection requires a current API 2FA code. Map it under Optional settings.');
+      return executeCli(command, inputs, creds, {
+        allowWrites: inputs.allowChanges === true, workspace: (inputs.paperAccount || inputs.cliWorkspace || extra?.cliWorkspace || (paper ? creds.defaultWorkspace : undefined)) as string | undefined,
+        seconds: Number(inputs.cliSeconds ?? extra?.cliSeconds ?? 15), maxEvents: Number(inputs.cliMaxEvents ?? 10), otp,
       });
     },
   });

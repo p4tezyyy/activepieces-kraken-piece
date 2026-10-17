@@ -114,8 +114,8 @@ test('Validate order and deposit address reads cannot be turned into writes', as
   const requests = [];
   global.fetch = async (_, init) => { requests.push(new URLSearchParams(init.body)); return json({ error: [], result: {} }); };
   try {
-    await kraken.getAction('spot_validate_order').run({ auth: { props: connection }, propsValue: { parameters: { validate: false } } });
-    await kraken.getAction('spot_deposit_addresses').run({ auth: { props: connection }, propsValue: { parameters: { new: true } } });
+    await kraken.getAction('spot_validate_order').run({ auth: { props: connection }, propsValue: { parameters: { validate: false, pair: 'XBTUSD', type: 'buy', ordertype: 'market', volume: '0.01' } } });
+    await kraken.getAction('spot_deposit_addresses').run({ auth: { props: connection }, propsValue: { parameters: { new: true, asset: 'XXBT', method: 'Bitcoin' } } });
     assert.equal(requests[0].get('validate'), 'true');
     assert.equal(requests[1].get('new'), 'false');
   } finally { global.fetch = original; }
@@ -156,4 +156,73 @@ test('Polling consumes multiple pages, sorts, and deduplicates overlap', async (
 });
 test('Polling refuses incomplete pages without returning a new cursor', async () => {
   await assert.rejects(pollHistory({ start: 1, seen: [] }, 100, async () => ({ rows: {}, count: 50 })), /pagination stopped/);
+});
+
+test('Named API forms expose normal inputs and omit generic JSON / irrelevant authentication', () => {
+  const order = kraken.getAction('spot_place_order');
+  assert.equal(order.props.pair.required, true);
+  assert.equal(order.props.volume.required, true);
+  assert.equal(order.props.type.type, 'STATIC_DROPDOWN');
+  assert.equal(order.props.parameters, undefined);
+  for (const name of ['spot_ticker', 'futures_place_order']) assert.equal(kraken.getAction(name).props.otp, undefined);
+  const batch = kraken.getAction('spot_place_batch_orders');
+  assert.equal(batch.props.orders.type, 'ARRAY');
+  assert.equal(batch.props.orders.properties.ordertype.type, 'STATIC_DROPDOWN');
+});
+test('2FA inputs are conditional on the connection setting', async () => {
+  const group = kraken.getAction('spot_balance').props.advancedInputs;
+  assert.equal((await group.props({ auth: { props: {} } }, {})).otp, undefined);
+  const fields = await group.props({ auth: { props: { spotApi2fa: true } } }, {});
+  assert.equal(fields.otp.displayName, 'Current API 2FA code');
+  assert.equal(fields.otp.required, true);
+});
+test('Optional settings expose mapped fields with meaningful types', async () => {
+  const group = kraken.getAction('spot_place_order').props.advancedInputs;
+  assert.deepEqual(await group.props({ showAdvanced: false }, {}), {});
+  const fields = await group.props({ showAdvanced: true }, {});
+  assert.ok(fields['close[ordertype]']);
+  assert.ok(fields.reduce_only);
+  assert.equal(fields.reduce_only.type, 'STATIC_DROPDOWN');
+});
+test('New forms validate required inputs before sending a request', async () => {
+  await assert.rejects(kraken.getAction('spot_place_order').run({ propsValue: { allowChanges: true } }), /required/);
+});
+test('Mapped optional fields are serialized and unset dropdown choices are omitted', async () => {
+  const original = global.fetch; let body;
+  global.fetch = async (_, init) => { body = new URLSearchParams(init.body); return json({ error: [], result: {} }); };
+  try {
+    await kraken.getAction('spot_validate_order').run({ auth: { props: connection }, propsValue: {
+      pair: 'XBTUSD', type: 'buy', ordertype: 'market', volume: '0.0000000100',
+      advancedInputs: { reduce_only: true, stptype: '__kraken_default__', 'close[ordertype]': 'stop-loss', 'close[price]': '100' },
+    } });
+    assert.equal(body.get('volume'), '0.0000000100');
+    assert.equal(body.get('reduce_only'), 'true');
+    assert.equal(body.get('close[price]'), '100');
+    assert.equal(body.has('stptype'), false);
+  } finally { global.fetch = original; }
+});
+test('CLI ordinary forms omit paper-account, timeout, stream and write clutter', () => {
+  const props = kraken.getAction('cli_ticker').props;
+  for (const key of ['cliWorkspace', 'paperAccount', 'cliSeconds', 'cliMaxEvents', 'allowChanges']) assert.equal(props[key], undefined);
+  assert.equal(props.pair.type, 'ARRAY');
+  assert.equal(props.pair.properties, undefined, 'Scalar arrays must keep mapped primitive items intact in the engine');
+  assert.equal(kraken.getAction('cli_paper_balance').props.paperAccount.displayName, 'Paper trading account (optional)');
+  assert.equal(kraken.getAction('cli_ws_ticker').props.cliMaxEvents.type, 'NUMBER');
+});
+test('Mapped CLI array rows become plain argv values and use internal execution defaults', async () => {
+  const original = global.fetch; const oldUrl = process.env.KRAKEN_CLI_BRIDGE_URL; let body;
+  process.env.KRAKEN_CLI_BRIDGE_URL = 'http://local-test';
+  global.fetch = async (_, init) => { body = JSON.parse(init.body); return json({ result: { ok: true } }); };
+  try {
+    await kraken.getAction('cli_ticker').run({ propsValue: { pair: [{ value: 'BTCUSD' }, { value: 'ETHUSD' }] } });
+    assert.deepEqual(body.inputs.pair, ['BTCUSD', 'ETHUSD']);
+    assert.equal(body.options.seconds, 15);
+    assert.equal(body.options.workspace, undefined);
+  } finally { global.fetch = original; if (oldUrl === undefined) delete process.env.KRAKEN_CLI_BRIDGE_URL; else process.env.KRAKEN_CLI_BRIDGE_URL = oldUrl; }
+});
+test('Futures batch instructions use structured rows and preserve operation types', async () => {
+  const action = kraken.getAction('futures_batch_orders');
+  const rows = action.props.json__batchOrder;
+  assert.equal(rows.type, 'ARRAY');
+  assert.deepEqual(rows.properties.order.options.options.filter(o => o.value !== '__kraken_default__').map(o => o.value), ['send', 'edit', 'cancel']);
 });

@@ -1,0 +1,3035 @@
+{
+  "sources": {
+    "spot": "https://docs.kraken.com/openapi/spot-rest.yaml",
+    "futures": "https://docs.kraken.com/openapi/futures-rest.yaml"
+  },
+  "actions": {
+    "spot:Server Time": {
+      "description": "Get Server Time",
+      "fields": {}
+    },
+    "spot:System Status": {
+      "description": "Get System Status",
+      "fields": {}
+    },
+    "spot:Assets": {
+      "description": "Get Asset Info",
+      "fields": {
+        "asset": {
+          "type": "string",
+          "required": false,
+          "description": "Comma delimited list of assets to get info on (optional, default all available assets)"
+        },
+        "aclass": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "currency",
+            "tokenized_asset"
+          ],
+          "default": "currency",
+          "description": "Filters the asset class to retrieve (optional) * currency = spot currency pairs. * tokenized_asset = xStocks."
+        },
+        "assetVersion": {
+          "type": "integer",
+          "required": false,
+          "enum": [
+            1
+          ],
+          "description": "Controls whether response keys and asset identifier fields use Kraken's internal names or display names. * Omitted (default): internal names are used. Asset keys use legacy X/Z-prefixed format (XXBT, ZUSD). Pair keys use the internal format (XXBTZUSD). Asset identifier fields (base, quote, fee_volum"
+        }
+      }
+    },
+    "spot:Trading Pairs": {
+      "description": "Get Tradable Asset Pairs",
+      "fields": {
+        "assetVersion": {
+          "type": "integer",
+          "required": false,
+          "enum": [
+            1
+          ],
+          "description": "Controls whether response keys and asset identifier fields use Kraken's internal names or display names. * Omitted (default): internal names are used. Asset keys use legacy X/Z-prefixed format (XXBT, ZUSD). Pair keys use the internal format (XXBTZUSD). Asset identifier fields (base, quote, fee_volum"
+        },
+        "pair": {
+          "type": "string",
+          "required": false,
+          "description": "Asset pairs to get data for"
+        },
+        "aclass_base": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "currency",
+            "tokenized_asset"
+          ],
+          "default": "currency",
+          "description": "Filters the asset class to retrieve (optional) * currency = spot currency pairs. * tokenized_asset = tokenized asset pairs, i.e. xStocks."
+        },
+        "info": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "info",
+            "leverage",
+            "fees",
+            "margin"
+          ],
+          "default": "info",
+          "description": "Info to retrieve (optional) * info = all info * leverage = leverage info * fees = fees schedule * margin = margin info"
+        },
+        "country_code": {
+          "type": "string",
+          "required": false,
+          "description": "Filter for response to only include pairs available in the provided country/region (ISO 3166-1 alpha-2 code)."
+        },
+        "execution_venue": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "international",
+            "bitnomial_exchange"
+          ],
+          "default": "international",
+          "description": "Comma-separated list of execution venues to filter by (optional) * international = International exchange * bitnomial_exchange = Bitnomial exchange"
+        }
+      }
+    },
+    "spot:Ticker": {
+      "description": "Get Ticker Information",
+      "fields": {
+        "pair": {
+          "type": "string",
+          "required": false,
+          "description": "Asset pair to get data for (optional, default: all tradeable exchange pairs)"
+        },
+        "assetVersion": {
+          "type": "integer",
+          "required": false,
+          "enum": [
+            1
+          ],
+          "description": "Controls whether response keys and asset identifier fields use Kraken's internal names or display names. * Omitted (default): internal names are used. Asset keys use legacy X/Z-prefixed format (XXBT, ZUSD). Pair keys use the internal format (XXBTZUSD). Asset identifier fields (base, quote, fee_volum"
+        },
+        "asset_class": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "tokenized_asset",
+            "forex"
+          ],
+          "default": "forex",
+          "description": "This parameter is required on requests for tokenized pairs, i.e. xStocks. If asset_class is provided without the pair parameter, all pairs for that asset class will be returned."
+        }
+      }
+    },
+    "spot:Candles": {
+      "description": "Get OHLC Data",
+      "fields": {
+        "pair": {
+          "type": "string",
+          "required": true,
+          "description": "Asset pair to get data for"
+        },
+        "assetVersion": {
+          "type": "integer",
+          "required": false,
+          "enum": [
+            1
+          ],
+          "description": "Controls whether response keys and asset identifier fields use Kraken's internal names or display names. * Omitted (default): internal names are used. Asset keys use legacy X/Z-prefixed format (XXBT, ZUSD). Pair keys use the internal format (XXBTZUSD). Asset identifier fields (base, quote, fee_volum"
+        },
+        "interval": {
+          "type": "integer",
+          "required": false,
+          "enum": [
+            1,
+            5,
+            15,
+            30,
+            60,
+            240,
+            1440,
+            10080,
+            21600
+          ],
+          "default": 1,
+          "description": "Time frame interval in minutes"
+        },
+        "since": {
+          "type": "integer",
+          "required": false,
+          "description": "Return OHLC entries since the given timestamp (intended for incremental updates)"
+        },
+        "asset_class": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "tokenized_asset"
+          ],
+          "description": "This parameter is required on requests for non-crypto pairs, i.e. use tokenized_asset for xStocks."
+        }
+      }
+    },
+    "spot:Order Book": {
+      "description": "Get Order Book",
+      "fields": {
+        "pair": {
+          "type": "string",
+          "required": true,
+          "description": "Asset pair to get data for"
+        },
+        "assetVersion": {
+          "type": "integer",
+          "required": false,
+          "enum": [
+            1
+          ],
+          "description": "Controls whether response keys and asset identifier fields use Kraken's internal names or display names. * Omitted (default): internal names are used. Asset keys use legacy X/Z-prefixed format (XXBT, ZUSD). Pair keys use the internal format (XXBTZUSD). Asset identifier fields (base, quote, fee_volum"
+        },
+        "count": {
+          "type": "integer",
+          "required": false,
+          "default": 100,
+          "minimum": 1,
+          "maximum": 500,
+          "description": "Maximum number of asks/bids"
+        },
+        "asset_class": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "tokenized_asset"
+          ],
+          "description": "This parameter is required on requests for non-crypto pairs, i.e. use tokenized_asset for xStocks."
+        }
+      }
+    },
+    "spot:Grouped Order Book": {
+      "description": "Get Grouped Order Book",
+      "fields": {
+        "pair": {
+          "type": "string",
+          "required": true,
+          "description": "Asset pair to get order book for"
+        },
+        "depth": {
+          "type": "integer",
+          "required": false,
+          "enum": [
+            10,
+            25,
+            100,
+            250,
+            1000
+          ],
+          "default": 10,
+          "description": "The number of price levels to return per side (bids/asks)."
+        },
+        "grouping": {
+          "type": "integer",
+          "required": false,
+          "enum": [
+            1,
+            5,
+            10,
+            25,
+            50,
+            100,
+            250,
+            500,
+            1000
+          ],
+          "default": 1,
+          "format": "int32",
+          "description": "Specifies how many tick levels should be within each price level. Bids and asks between grouped price levels are accumulated to the nearest passive level (asks rounded up, bids down)."
+        }
+      }
+    },
+    "spot:Recent Trades": {
+      "description": "Get Recent Trades",
+      "fields": {
+        "pair": {
+          "type": "string",
+          "required": true,
+          "description": "Asset pair to get data for"
+        },
+        "assetVersion": {
+          "type": "integer",
+          "required": false,
+          "enum": [
+            1
+          ],
+          "description": "Controls whether response keys and asset identifier fields use Kraken's internal names or display names. * Omitted (default): internal names are used. Asset keys use legacy X/Z-prefixed format (XXBT, ZUSD). Pair keys use the internal format (XXBTZUSD). Asset identifier fields (base, quote, fee_volum"
+        },
+        "since": {
+          "type": "string",
+          "required": false,
+          "description": "Return trade data since given timestamp"
+        },
+        "count": {
+          "type": "integer",
+          "required": false,
+          "default": 1000,
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "Return specific number of trades, up to 1000"
+        },
+        "asset_class": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "tokenized_asset"
+          ],
+          "description": "This parameter is required on requests for non-crypto pairs, i.e. use tokenized_asset for xStocks."
+        }
+      }
+    },
+    "spot:Recent Spreads": {
+      "description": "Get Recent Spreads",
+      "fields": {
+        "pair": {
+          "type": "string",
+          "required": true,
+          "description": "Asset pair to get data for"
+        },
+        "assetVersion": {
+          "type": "integer",
+          "required": false,
+          "enum": [
+            1
+          ],
+          "description": "Controls whether response keys and asset identifier fields use Kraken's internal names or display names. * Omitted (default): internal names are used. Asset keys use legacy X/Z-prefixed format (XXBT, ZUSD). Pair keys use the internal format (XXBTZUSD). Asset identifier fields (base, quote, fee_volum"
+        },
+        "since": {
+          "type": "integer",
+          "required": false,
+          "description": "Returns spread data since given timestamp. Optional, intended for incremental updates within available dataset (does not contain all historical spreads)."
+        },
+        "asset_class": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "tokenized_asset"
+          ],
+          "description": "This parameter is required on requests for non-crypto pairs, i.e. use tokenized_asset for xStocks."
+        }
+      }
+    },
+    "spot:Balance": {
+      "description": "Get Account Balance",
+      "fields": {
+        "account_id": {
+          "type": "string",
+          "required": false,
+          "description": "Public wallet account ID. Omit to use the authenticated user's default wallet. See List Wallet Accounts."
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Extended Balance": {
+      "description": "Get Extended Balance",
+      "fields": {
+        "account_id": {
+          "type": "string",
+          "required": false,
+          "description": "Public wallet account ID. Omit to use the authenticated user's default wallet. See List Wallet Accounts."
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Trade Balance": {
+      "description": "Get Trade Balance",
+      "fields": {
+        "account_id": {
+          "type": "string",
+          "required": false,
+          "description": "Public wallet account ID. Omit to use the authenticated user's default wallet. See List Wallet Accounts."
+        },
+        "asset": {
+          "type": "string",
+          "required": false,
+          "default": "ZUSD",
+          "description": "Base asset used to determine balance"
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Credit Lines": {
+      "description": "Get Credit Lines",
+      "fields": {
+        "account_id": {
+          "type": "string",
+          "required": false,
+          "description": "Public wallet account ID. Omit to use the authenticated user's default wallet. See List Wallet Accounts."
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Open Orders": {
+      "description": "Get Open Orders",
+      "fields": {
+        "account_id": {
+          "type": "string",
+          "required": false,
+          "description": "Public wallet account ID. Omit to use the authenticated user's default wallet. See List Wallet Accounts."
+        },
+        "trades": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether or not to include trades related to position in output"
+        },
+        "userref": {
+          "type": "integer",
+          "required": false,
+          "format": "int32",
+          "description": "Restrict results to given user reference"
+        },
+        "cl_ord_id": {
+          "type": "string",
+          "required": false,
+          "description": "Restrict results to given client order id"
+        },
+        "consolidate_taker": {
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Whether or not to consolidate trades by individual taker trades"
+        },
+        "with_cursor": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Use cursor-based pagination. Each page then holds at most limit orders, and the response includes cursor.next when more orders are available."
+        },
+        "limit": {
+          "type": "integer",
+          "required": false,
+          "minimum": 1,
+          "description": "Maximum number of orders to return. When with_cursor is true, defaults to 50 and values above 100 are rejected. Otherwise all open orders are returned unless limit is set (capped at 1000)."
+        },
+        "cursor": {
+          "type": "string",
+          "required": false,
+          "description": "Opaque pagination token from cursor.next of the previous page. Requires with_cursor."
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Closed Orders": {
+      "description": "Get Closed Orders",
+      "fields": {
+        "account_id": {
+          "type": "string",
+          "required": false,
+          "description": "Public wallet account ID. Omit to use the authenticated user's default wallet. See List Wallet Accounts."
+        },
+        "trades": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether or not to include trades related to position in output"
+        },
+        "userref": {
+          "type": "integer",
+          "required": false,
+          "format": "int32",
+          "description": "Restrict results to given user reference"
+        },
+        "cl_ord_id": {
+          "type": "string",
+          "required": false,
+          "description": "Restrict results to given client order id"
+        },
+        "start": {
+          "type": "integer",
+          "required": false,
+          "description": "Starting unix timestamp or order tx ID of results (exclusive)"
+        },
+        "end": {
+          "type": "integer",
+          "required": false,
+          "description": "Ending unix timestamp or order tx ID of results (inclusive)"
+        },
+        "ofs": {
+          "type": "integer",
+          "required": false,
+          "description": "Result offset for pagination. Deprecated, use with_cursor and cursor instead. Must be absent or 0 when with_cursor is true."
+        },
+        "with_cursor": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Use cursor-based pagination instead of ofs. Each page holds up to 50 orders, and the response includes cursor.next when more orders are available."
+        },
+        "cursor": {
+          "type": "string",
+          "required": false,
+          "description": "Opaque pagination token from cursor.next of the previous page. Requires with_cursor."
+        },
+        "closetime": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "open",
+            "close",
+            "both"
+          ],
+          "default": "both",
+          "description": "Which time field is used when filtering results: - open: Uses the opentm field only (start < opentm && opentm <= end) - close: Uses the closetm field only (start < closetm && closetm <= end) - both: Requires both times to fall within the range (start < opentm && closetm <= end)"
+        },
+        "consolidate_taker": {
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Whether or not to consolidate trades by individual taker trades"
+        },
+        "without_count": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "If true, does not retrieve the count of closed orders (count is returned as 0, as it is when with_cursor is true). Request can be noticeably faster for users with many closed orders as this avoids an extra database query."
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Order Details": {
+      "description": "Query Orders Info",
+      "fields": {
+        "account_id": {
+          "type": "string",
+          "required": false,
+          "description": "Public wallet account ID. Omit to use the authenticated user's default wallet. See List Wallet Accounts."
+        },
+        "trades": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether or not to include trades related to position in output"
+        },
+        "userref": {
+          "type": "integer",
+          "required": false,
+          "format": "int32",
+          "description": "Restrict results to given user reference id"
+        },
+        "txid": {
+          "type": "string",
+          "required": true,
+          "description": "The Kraken order identifier. To query multiple orders, use comma delimited list of up to 50 ids."
+        },
+        "cl_ord_id": {
+          "type": "string",
+          "required": false,
+          "description": "Restrict results to given client order id"
+        },
+        "consolidate_taker": {
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Whether or not to consolidate trades by individual taker trades"
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Trade History": {
+      "description": "Get Trades History",
+      "fields": {
+        "account_id": {
+          "type": "string",
+          "required": false,
+          "description": "Public wallet account ID. Omit to use the authenticated user's default wallet. See List Wallet Accounts."
+        },
+        "type": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "all",
+            "any position",
+            "closed position",
+            "closing position",
+            "no position"
+          ],
+          "default": "all",
+          "description": "Type of trade"
+        },
+        "trades": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether or not to include trades related to position in output"
+        },
+        "start": {
+          "type": "integer",
+          "required": false,
+          "description": "Starting unix timestamp or trade tx ID of results (exclusive)"
+        },
+        "end": {
+          "type": "integer",
+          "required": false,
+          "description": "Ending unix timestamp or trade tx ID of results (inclusive)"
+        },
+        "ofs": {
+          "type": "integer",
+          "required": false,
+          "description": "Result offset for pagination. Deprecated, use with_cursor and cursor instead. Must be absent or 0 when with_cursor is true."
+        },
+        "without_count": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "If true, does not retrieve count of trades. Request can be noticeably faster for users with many trades as this avoids an extra database query."
+        },
+        "consolidate_taker": {
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "description": "Whether or not to consolidate trades by individual taker trades"
+        },
+        "ledgers": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether or not to include related ledger ids for given trade Note that setting this to true will slow request performance"
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        },
+        "aclass": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "forex",
+            "equity_pair",
+            "futures_contract",
+            "synthetic_pair",
+            "external_pair"
+          ],
+          "default": "forex",
+          "description": "Asset class of the pair filter."
+        },
+        "pair": {
+          "type": "string",
+          "required": false,
+          "description": "Filter results to a single trading pair. An unrecognized pair returns EQuery:Unknown asset pair."
+        },
+        "limit": {
+          "type": "integer",
+          "required": false,
+          "default": 50,
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Number of trades returned per page (1\u2013100). Values above 100 get clamped to 100."
+        },
+        "with_cursor": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Use cursor-based pagination instead of ofs. The response then includes cursor.next when more trades are available."
+        },
+        "cursor": {
+          "type": "string",
+          "required": false,
+          "description": "Opaque pagination token from cursor.next of the previous page. Requires with_cursor."
+        }
+      }
+    },
+    "spot:Trade Details": {
+      "description": "Query Trades Info",
+      "fields": {
+        "account_id": {
+          "type": "string",
+          "required": false,
+          "description": "Public wallet account ID. Omit to use the authenticated user's default wallet. See List Wallet Accounts."
+        },
+        "txid": {
+          "type": "string",
+          "required": true,
+          "description": "Comma delimited list of transaction IDs to query info about (20 maximum)"
+        },
+        "trades": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether or not to include trades related to position in output"
+        },
+        "ledgers": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether or not to include related ledger ids for given trade"
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Open Positions": {
+      "description": "Get Open Positions",
+      "fields": {
+        "account_id": {
+          "type": "string",
+          "required": false,
+          "description": "Public wallet account ID. Omit to use the authenticated user's default wallet. See List Wallet Accounts."
+        },
+        "txid": {
+          "type": "string",
+          "required": false,
+          "description": "Comma delimited list of txids to limit output to"
+        },
+        "docalcs": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether to include P&L calculations"
+        },
+        "consolidation": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "market"
+          ],
+          "description": "Consolidate positions by market/pair"
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Ledger History": {
+      "description": "Get Ledgers Info",
+      "fields": {
+        "account_id": {
+          "type": "string",
+          "required": false,
+          "description": "Public wallet account ID. Omit to use the authenticated user's default wallet. See List Wallet Accounts."
+        },
+        "asset": {
+          "type": "string",
+          "required": false,
+          "default": "all",
+          "description": "Filter output by asset. Accepts one of the following formats: * all, a single asset, or a comma delimited list of assets. * A list of { asset, aclass } objects, to filter by assets of a specific asset class (e.g. tokenized_asset).",
+          "items": {
+            "type": "object",
+            "required": false,
+            "properties": {
+              "asset": {
+                "type": "string",
+                "required": true,
+                "description": "Asset name."
+              },
+              "aclass": {
+                "type": "string",
+                "required": true,
+                "enum": [
+                  "currency",
+                  "forex",
+                  "equity",
+                  "equity_pair",
+                  "nft",
+                  "derivatives",
+                  "tokenized_asset",
+                  "futures_contract"
+                ],
+                "description": "Asset class of the asset."
+              }
+            }
+          }
+        },
+        "aclass": {
+          "type": "string",
+          "required": false,
+          "default": "currency",
+          "description": "Filter output by asset class. Deprecated, use the { asset, aclass } list form of asset instead."
+        },
+        "type": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "all",
+            "trade",
+            "deposit",
+            "withdrawal",
+            "transfer",
+            "margin",
+            "adjustment",
+            "rollover",
+            "credit",
+            "settled",
+            "staking",
+            "dividend",
+            "sale",
+            "nft_rebate"
+          ],
+          "default": "all",
+          "description": "Type of ledger to retrieve"
+        },
+        "start": {
+          "type": "integer",
+          "required": false,
+          "description": "Starting unix timestamp or ledger ID of results (exclusive)"
+        },
+        "end": {
+          "type": "integer",
+          "required": false,
+          "description": "Ending unix timestamp or ledger ID of results (inclusive)"
+        },
+        "ofs": {
+          "type": "integer",
+          "required": false,
+          "description": "Result offset for pagination. Deprecated, use with_cursor and cursor instead. Must be absent or 0 when with_cursor is true."
+        },
+        "with_cursor": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Use cursor-based pagination instead of ofs. Each page holds up to 50 ledger entries, and the response includes cursor.next when more entries are available. start and end still narrow the range. Skips the count query, so count is returned as null."
+        },
+        "cursor": {
+          "type": "string",
+          "required": false,
+          "description": "Opaque pagination token from cursor.next of the previous page. Requires with_cursor."
+        },
+        "without_count": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "If true, does not retrieve count of ledger entries (count is returned as null). Request can be noticeably faster for users with many ledger entries as this avoids an extra database query."
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Ledger Details": {
+      "description": "Query Ledgers",
+      "fields": {
+        "account_id": {
+          "type": "string",
+          "required": false,
+          "description": "Public wallet account ID. Omit to use the authenticated user's default wallet. See List Wallet Accounts."
+        },
+        "id": {
+          "type": "string",
+          "required": true,
+          "description": "Comma delimited list of ledger IDs to query info about (20 maximum)"
+        },
+        "trades": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether or not to include trades related to position in output. Deprecated, do not rely on this parameter."
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Trading Volume and Fees": {
+      "description": "Get Trade Volume",
+      "fields": {
+        "pair": {
+          "type": "string",
+          "required": false,
+          "description": "Asset pair(s) for which to retrieve fee info (optional, but required if any fee info is desired). Accepts one of the following formats: * A comma-delimited list of pair names \u2014 each is looked up as a forex pair. * A list of { asset, aclass } objects (pairs_with_class). Required to request fees for n",
+          "items": {
+            "type": "object",
+            "required": false,
+            "properties": {
+              "asset": {
+                "type": "string",
+                "required": true,
+                "description": "The pair name. All result amounts will be expressed in units of this asset."
+              },
+              "aclass": {
+                "type": "string",
+                "required": true,
+                "enum": [
+                  "currency",
+                  "forex",
+                  "equity",
+                  "equity_pair",
+                  "nft",
+                  "derivatives",
+                  "tokenized_asset",
+                  "futures_contract"
+                ],
+                "description": "The asset class of the pair."
+              }
+            }
+          }
+        },
+        "fee-info": {
+          "type": "string",
+          "required": false,
+          "default": false,
+          "description": "Whether or not to include fee info in the results (legacy parameter, accepted for backwards compatibility)."
+        },
+        "fee_schedule": {
+          "type": "boolean",
+          "required": false,
+          "description": "Whether to include the full fee schedule per trading pair in the response (returned in schedules)."
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:API Key Info": {
+      "description": "Get API Key Info",
+      "fields": {}
+    },
+    "spot:WebSocket Token": {
+      "description": "Get Websockets Token",
+      "fields": {}
+    },
+    "spot:Level 3 Order Book": {
+      "description": "Query L3 Order Book",
+      "fields": {
+        "pair": {
+          "type": "string",
+          "required": true,
+          "description": "Asset pair to get order book for"
+        },
+        "depth": {
+          "type": "integer",
+          "required": false,
+          "enum": [
+            0,
+            10,
+            25,
+            100,
+            250,
+            1000
+          ],
+          "default": 100,
+          "description": "Number of price levels to return per side (bids/asks). Use 0 to return the full book."
+        }
+      }
+    },
+    "spot:Order Amend History": {
+      "description": "Get Order Amends",
+      "fields": {
+        "account_id": {
+          "type": "string",
+          "required": false,
+          "description": "Public wallet account ID. Omit to use the authenticated user's default wallet. See List Wallet Accounts."
+        },
+        "order_id": {
+          "type": "string",
+          "required": true,
+          "description": "The Kraken order identifier for the amended order."
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Export Status": {
+      "description": "Get Export Report Status",
+      "fields": {
+        "report": {
+          "type": "string",
+          "required": true,
+          "enum": [
+            "trades",
+            "ledgers"
+          ],
+          "description": "Type of reports to inquire about"
+        }
+      }
+    },
+    "spot:Place Order": {
+      "description": "Add Order",
+      "fields": {
+        "userref": {
+          "type": "integer",
+          "required": false,
+          "format": "int32",
+          "description": "This is an optional non-unique, numeric identifier which can associated with a number of orders by the client. This field is mutually exclusive with cl_ord_id parameter. userref is an optional user-specified integer id that can be associated with any number of orders. Many clients choose a userref c"
+        },
+        "cl_ord_id": {
+          "type": "string",
+          "required": false,
+          "description": "Adds an alphanumeric client order identifier which uniquely identifies an open order for each client. This field is mutually exclusive with userref parameter. The cl_ord_id parameter can be one of the following formats: * \u2022 Long UUID: 6d1b345e-2821-40e2-ad83-4ecb18a06876 32 hex characters separated "
+        },
+        "ordertype": {
+          "type": "string",
+          "required": true,
+          "enum": [
+            "market",
+            "limit",
+            "iceberg",
+            "stop-loss",
+            "take-profit",
+            "stop-loss-limit",
+            "take-profit-limit",
+            "trailing-stop",
+            "trailing-stop-limit",
+            "settle-position"
+          ],
+          "description": "The execution model of the order."
+        },
+        "type": {
+          "type": "string",
+          "required": true,
+          "enum": [
+            "buy",
+            "sell"
+          ],
+          "description": "Order direction (buy/sell)"
+        },
+        "volume": {
+          "type": "string",
+          "required": true,
+          "description": "Order quantity in terms of the base asset > Note: Volume can be specified as 0 for closing margin orders to automatically fill the requisite quantity."
+        },
+        "displayvol": {
+          "type": "string",
+          "required": false,
+          "description": "For iceberg orders only, it defines the quantity to show in the book while the rest of order quantity remains hidden. Minimum value is 1 / 15 of volume."
+        },
+        "pair": {
+          "type": "string",
+          "required": true,
+          "description": "Asset pair id or altname"
+        },
+        "asset_class": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "tokenized_asset"
+          ],
+          "description": "This parameter is required on requests for non-crypto pairs, i.e. use tokenized_asset for xStocks."
+        },
+        "price": {
+          "type": "string",
+          "required": false,
+          "description": "Price: * \u2022 Limit price for limit and iceberg orders * \u2022 Trigger price for stop-loss, stop-loss-limit, take-profit, take-profit-limit, trailing-stop and trailing-stop-limit orders Notes: * \u2022 Relative Prices: Either price or price2 can be preceded by +, -, or # to specify the order price as an offset "
+        },
+        "price2": {
+          "type": "string",
+          "required": false,
+          "description": "Secondary Price: * \u2022 Limit price for stop-loss-limit, take-profit-limit and trailing-stop-limit orders Note: * \u2022 Trailing Stops: Must use a relative price for this field, namely one of the + or - prefixes. This will provide the offset from the trigger price to the limit price, i.e. +0 would set the "
+        },
+        "trigger": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "index",
+            "last"
+          ],
+          "default": "last",
+          "description": "Price signal used to trigger stop-loss, stop-loss-limit, take-profit, take-profit-limit, trailing-stop and trailing-stop-limit orders Notes: * \u2022 This trigger type will also be used for any associated conditional close orders. * \u2022 To keep triggers serviceable, the last price will be used as fallback "
+        },
+        "leverage": {
+          "type": "string",
+          "required": false,
+          "description": "Amount of leverage desired (default: none)"
+        },
+        "reduce_only": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "If true, order will only reduce a currently open position, not increase it or open a new position."
+        },
+        "stptype": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "cancel-newest",
+            "cancel-oldest",
+            "cancel-both"
+          ],
+          "default": "cancel-newest",
+          "description": "Self Trade Prevention (STP) is a protection feature to prevent users from inadvertently or deliberately trading against themselves. To prevent a self-match, one of the following STP modes can be used to define which order(s) will be expired: * \u2022 cancel-newest: arriving order will be canceled * \u2022 can"
+        },
+        "oflags": {
+          "type": "string",
+          "required": false,
+          "description": "Comma delimited list of order flags * \u2022 post post-only order (available when ordertype = limit) * \u2022 fcib prefer fee in base currency (default if selling) * \u2022 fciq prefer fee in quote currency (default if buying, mutually exclusive with fcib) * \u2022 nompp (DEPRECATED) \u2014 disabling Market Price Protection"
+        },
+        "timeinforce": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "GTC",
+            "IOC",
+            "GTD",
+            "FOK"
+          ],
+          "default": "GTC",
+          "description": "Time-in-force of the order to specify how long it should remain in the order book before being cancelled. GTC (Good-'til-cancelled) is default if the parameter is omitted. IOC (immediate-or-cancel) will immediately execute the amount possible and cancel any remaining balance rather than resting in t"
+        },
+        "starttm": {
+          "type": "string",
+          "required": false,
+          "description": "Scheduled start time, can be specified as an absolute timestamp or as a number of seconds in the future: * \u2022 0 now (default) * \u2022 = unix timestamp of start time * \u2022 + = schedule start time seconds from now * Note that URL encoding of the + character changes it to a space, so please use %2b followed b"
+        },
+        "expiretm": {
+          "type": "string",
+          "required": false,
+          "description": "Expiry time on GTD orders can be set up to one month in future, it is specified as an absolute timestamp or as a number of seconds from now: * \u2022 0 no expiration (default) * \u2022 = unix timestamp of expiration time * \u2022 + = expire seconds from now, minimum 5 seconds * Note that URL encoding of the + char"
+        },
+        "close[ordertype]": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "limit",
+            "iceberg",
+            "stop-loss",
+            "take-profit",
+            "stop-loss-limit",
+            "take-profit-limit",
+            "trailing-stop",
+            "trailing-stop-limit"
+          ],
+          "description": "Conditional close order type > Note: Conditional close orders are triggered by execution of the primary order in the same quantity and opposite direction, but once triggered are __independent orders__ that may reduce or increase net position"
+        },
+        "close[price]": {
+          "type": "string",
+          "required": false,
+          "description": "Conditional close order price"
+        },
+        "close[price2]": {
+          "type": "string",
+          "required": false,
+          "description": "Conditional close order price2"
+        },
+        "deadline": {
+          "type": "string",
+          "required": false,
+          "description": "RFC3339 timestamp (e.g. 2021-04-01T00:18:45Z) after which the matching engine should reject the new order request, in presence of latency or order queueing: min now() + 2 seconds, max now() + 60 seconds."
+        },
+        "validate": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "If set to true the order will be validated only, it will not trade in the matching engine."
+        },
+        "broker": {
+          "type": "string",
+          "required": false,
+          "description": "Broker IIBAN (Partner's Kraken IIBAN)"
+        }
+      }
+    },
+    "spot:Amend Order": {
+      "description": "Amend Order",
+      "fields": {
+        "txid": {
+          "type": "string",
+          "required": false,
+          "description": "The Kraken identifier for the order to be amended. Either txid or cl_ord_id is required."
+        },
+        "cl_ord_id": {
+          "type": "string",
+          "required": false,
+          "description": "The client identifier for the order to be amended. Either txid or cl_ord_id is required."
+        },
+        "order_qty": {
+          "type": "string",
+          "required": false,
+          "description": "The new order quantity in terms of the base asset."
+        },
+        "display_qty": {
+          "type": "string",
+          "required": false,
+          "description": "For iceberg orders only, it defines the new quantity to show in the book while the rest of order quantity remains hidden. Minimum value is 1 / 15 of remaining order quantity."
+        },
+        "limit_price": {
+          "type": "string",
+          "required": false,
+          "description": "The new limit price restriction on the order (for order types that support limit price only). The relative pricing can be set by using the +, - prefixes and/or % suffix. * \u2022 + adds the amount from the reference price, i.e. market rises 50 USD \"+50\". * \u2022 - subtracts the amount from the reference pric"
+        },
+        "trigger_price": {
+          "type": "string",
+          "required": false,
+          "description": "The new trigger price to activate the order (for triggered order types only). The relative pricing can be set by using the +, - prefixes and/or % suffix. * \u2022 + adds the amount from the reference price, i.e. market rises 50 USD \"+50\". * \u2022 - subtracts the amount from the reference price, i.e. market d"
+        },
+        "pair": {
+          "type": "string",
+          "required": false,
+          "description": "The pair is required on amends for non-crypto pairs, i.e. provide the pair symbol for xStocks."
+        },
+        "post_only": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "An optional flag for limit_price amends. If true, the limit price change will be rejected if the order cannot be posted passively in the book."
+        },
+        "deadline": {
+          "type": "string",
+          "required": false,
+          "description": "RFC3339 timestamp (e.g. 2021-04-01T00:18:45Z) after which the matching engine should reject the new order request, in presence of latency or order queueing. min now() + 2 seconds, max now() + 60 seconds."
+        }
+      }
+    },
+    "spot:Edit Order": {
+      "description": "Edit Order",
+      "fields": {
+        "userref": {
+          "type": "integer",
+          "required": false,
+          "format": "int32",
+          "description": "User reference id userref is an optional user-specified integer id associated with edit request. > Note: userref from parent order will not be retained on the new order after edit."
+        },
+        "txid": {
+          "type": "string",
+          "required": true,
+          "description": "Original Order ID or User Reference Id (userref) which is user-specified integer id used with the original order. If userref is not unique and was used with multiple order, edit request is denied with an error."
+        },
+        "volume": {
+          "type": "string",
+          "required": false,
+          "description": "Order quantity in terms of the base asset."
+        },
+        "displayvol": {
+          "type": "string",
+          "required": false,
+          "description": "For iceberg orders only, it defines the quantity to show in the book while the rest of order quantity remains hidden. Minimum value is 1 / 15 of volume."
+        },
+        "pair": {
+          "type": "string",
+          "required": true,
+          "description": "Asset pair id or altname"
+        },
+        "asset_class": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "tokenized_asset"
+          ],
+          "description": "This parameter is required on requests for non-crypto pairs, i.e. use tokenized_asset for xStocks."
+        },
+        "price": {
+          "type": "string",
+          "required": false,
+          "description": "Price: * Limit price for limit and iceberg orders * Trigger price for stop-loss, stop-loss-limit, take-profit, take-profit-limit, trailing-stop and trailing-stop-limit orders Notes: * Relative Prices: Either price or price2 can be preceded by +, -, or # to specify the order price as an offset relati"
+        },
+        "price2": {
+          "type": "string",
+          "required": false,
+          "description": "Secondary Price: * Limit price for stop-loss-limit, take-profit-limit and trailing-stop-limit orders Note: * Trailing Stops: Must use a relative price for this field, namely one of the + or - prefixes. This will provide the offset from the trigger price to the limit price, i.e. +0 would set the limi"
+        },
+        "oflags": {
+          "type": "string",
+          "required": false,
+          "description": "Comma delimited list of order flags. Only these flags can be changed: - post post-only order (available when ordertype = limit). All the flags from the parent order are retained except post-only. post-only needs to be explicitly mentioned on edit request."
+        },
+        "deadline": {
+          "type": "string",
+          "required": false,
+          "description": "RFC3339 timestamp (e.g. 2021-04-01T00:18:45Z) after which the matching engine should reject the new order request, in presence of latency or order queueing. min now() + 2 seconds, max now() + 60 seconds."
+        },
+        "cancel_response": {
+          "type": "boolean",
+          "required": false,
+          "description": "Used to interpret if client wants to receive pending replace, before the order is completely replaced"
+        },
+        "validate": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Validate inputs only. Do not submit order."
+        }
+      }
+    },
+    "spot:Cancel Order": {
+      "description": "Cancel Order",
+      "fields": {
+        "txid": {
+          "type": "string",
+          "required": false,
+          "description": "Kraken order identifier (txid) or user reference (userref)"
+        },
+        "cl_ord_id": {
+          "type": "string",
+          "required": false,
+          "description": "An alphanumeric client order identifier which uniquely identifies an open order for each client."
+        }
+      }
+    },
+    "spot:Cancel All Orders": {
+      "description": "Cancel All Orders",
+      "fields": {}
+    },
+    "spot:Cancel All Orders After": {
+      "description": "Cancel All Orders After X",
+      "fields": {
+        "timeout": {
+          "type": "integer",
+          "required": true,
+          "description": "Duration (in seconds) to set/extend the timer, it should be less than 86400 seconds."
+        }
+      }
+    },
+    "spot:Place Batch Orders": {
+      "description": "Add Order Batch",
+      "fields": {
+        "orders": {
+          "type": "array",
+          "required": true,
+          "items": {
+            "type": "object",
+            "required": false,
+            "properties": {
+              "userref": {
+                "type": "integer",
+                "required": false,
+                "format": "int32",
+                "description": "User reference id userref is an optional user-specified integer id that can be associated with any number of orders. Many clients choose a userref corresponding to a unique integer id generated by their systems (e.g. a timestamp). However, because we don't enforce uniqueness on our side, it can also"
+              },
+              "cl_ord_id": {
+                "type": "string",
+                "required": false,
+                "description": "Adds an alphanumeric client order identifier which uniquely identifies an open order for each client. This field is mutually exclusive with userref parameter. The cl_ord_id parameter can be one of the following formats: * Long UUID: 6d1b345e-2821-40e2-ad83-4ecb18a06876 32 hex characters separated wi"
+              },
+              "ordertype": {
+                "type": "string",
+                "required": true,
+                "enum": [
+                  "market",
+                  "limit",
+                  "iceberg",
+                  "stop-loss",
+                  "take-profit",
+                  "stop-loss-limit",
+                  "take-profit-limit",
+                  "trailing-stop",
+                  "trailing-stop-limit",
+                  "settle-position"
+                ],
+                "description": "Order type"
+              },
+              "type": {
+                "type": "string",
+                "required": true,
+                "enum": [
+                  "buy",
+                  "sell"
+                ],
+                "description": "Order direction (buy/sell)"
+              },
+              "volume": {
+                "type": "string",
+                "required": true,
+                "description": "Order quantity in terms of the base asset > Note: Volume can be specified as 0 for closing margin orders to automatically fill the requisite quantity."
+              },
+              "displayvol": {
+                "type": "string",
+                "required": false,
+                "description": "For iceberg orders only, it defines the quantity to show in the book while the rest of order quantity remains hidden. Minimum value is 1 / 15 of volume."
+              },
+              "price": {
+                "type": "string",
+                "required": false,
+                "description": "Price: * Limit price for limit and iceberg orders * Trigger price for stop-loss, stop-loss-limit, take-profit, and take-profit-limit orders Notes: * Relative Prices: Either price or price2 can be preceded by +, -, or # to specify the order price as an offset relative to the last traded price. + adds"
+              },
+              "price2": {
+                "type": "string",
+                "required": false,
+                "description": "Secondary Price: * Limit price for stop-loss-limit and take-profit-limit"
+              },
+              "trigger": {
+                "type": "string",
+                "required": false,
+                "enum": [
+                  "index",
+                  "last"
+                ],
+                "default": "last",
+                "description": "Price signal used to trigger stop-loss, stop-loss-limit, take-profit, and take-profit-limit orders Notes: * To keep triggers serviceable, the last price will be used as fallback reference price during connectivity issues with external index feeds."
+              },
+              "leverage": {
+                "type": "string",
+                "required": false,
+                "description": "Amount of leverage desired (default: none)"
+              },
+              "reduce_only": {
+                "type": "boolean",
+                "required": false,
+                "default": false,
+                "description": "If true, order will only reduce a currently open position, not increase it or open a new position."
+              },
+              "stptype": {
+                "type": "string",
+                "required": false,
+                "enum": [
+                  "cancel-newest",
+                  "cancel-oldest",
+                  "cancel-both"
+                ],
+                "default": "cancel-newest",
+                "description": "Self trade prevention behaviour definition: * cancel-newest - if self trade is triggered, arriving order will be canceled * cancel-oldest - if self trade is triggered, resting order will be canceled * cancel-both - if self trade is triggered, both arriving and resting orders will be canceled"
+              },
+              "oflags": {
+                "type": "string",
+                "required": false,
+                "description": "Comma delimited list of order flags * \u2022 post post-only order (available when ordertype = limit) * \u2022 fcib prefer fee in base currency (default if selling) * \u2022 fciq prefer fee in quote currency (default if buying, mutually exclusive with fcib) * \u2022 nompp (DEPRECATED) \u2014 disabling Market Price Protection"
+              },
+              "timeinforce": {
+                "type": "string",
+                "required": false,
+                "enum": [
+                  "GTC",
+                  "IOC",
+                  "GTD"
+                ],
+                "default": "GTC",
+                "description": "Time-in-force of the order to specify how long it should remain in the order book before being cancelled. GTC (Good-'til-cancelled) is default if the parameter is omitted. IOC (immediate-or-cancel) will immediately execute the amount possible and cancel any remaining balance rather than resting in t"
+              },
+              "starttm": {
+                "type": "string",
+                "required": false,
+                "description": "Scheduled start time, can be specified as an absolute timestamp or as a number of seconds in the future: * 0 now (default) * + schedule start time seconds from now * = unix timestamp of start time"
+              },
+              "expiretm": {
+                "type": "string",
+                "required": false,
+                "description": "Expiry time on GTD orders can be set up to one month in future, it is specified as an absolute timestamp or as a number of seconds from now: * 0 no expiration (default) * + = expire seconds from now, minimum 5 seconds * = unix timestamp of expiration time"
+              }
+            }
+          },
+          "minItems": 2,
+          "maxItems": 15
+        },
+        "pair": {
+          "type": "string",
+          "required": true,
+          "description": "Asset pair id or altname"
+        },
+        "asset_class": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "tokenized_asset"
+          ],
+          "description": "This parameter is required on requests for non-crypto pairs, i.e. use tokenized_asset for xStocks."
+        },
+        "deadline": {
+          "type": "string",
+          "required": false,
+          "description": "RFC3339 timestamp (e.g. 2021-04-01T00:18:45Z) after which the matching engine should reject the new order request, in presence of latency or order queueing. min now() + 2 seconds, max now() + 60 seconds."
+        },
+        "validate": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Validate inputs only. Do not submit order."
+        },
+        "broker": {
+          "type": "string",
+          "required": false,
+          "description": "Broker IIBAN (Partner's Kraken IIBAN)"
+        }
+      }
+    },
+    "spot:Cancel Batch Orders": {
+      "description": "Cancel Order Batch",
+      "fields": {
+        "orders": {
+          "type": "array",
+          "required": false,
+          "items": {
+            "type": "object",
+            "required": false,
+            "properties": {
+              "txid": {
+                "type": "string",
+                "required": false,
+                "description": "Open order transaction IDs (txid) or user references (userref), up to a maximum of 50 total unique IDs/references."
+              }
+            }
+          }
+        },
+        "cl_ord_ids": {
+          "type": "array",
+          "required": false,
+          "items": {
+            "type": "object",
+            "required": false,
+            "properties": {
+              "cl_ord_id": {
+                "type": "string",
+                "required": false,
+                "description": "An alphanumeric client order identifier which uniquely identifies an open order for each client. Up to a maximum of 50 total unique IDs/references."
+              }
+            }
+          }
+        }
+      }
+    },
+    "spot:Request Export": {
+      "description": "Request Export Report",
+      "fields": {
+        "report": {
+          "type": "string",
+          "required": true,
+          "enum": [
+            "trades",
+            "ledgers"
+          ],
+          "description": "Type of data to export"
+        },
+        "format": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "CSV",
+            "TSV"
+          ],
+          "default": "CSV",
+          "description": "File format to export"
+        },
+        "description": {
+          "type": "string",
+          "required": true,
+          "description": "Description for the export"
+        },
+        "fields": {
+          "type": "string",
+          "required": false,
+          "default": "all",
+          "description": "Comma-delimited list of fields to include * trades: ordertxid, time, ordertype, price, cost, fee, vol, margin, misc, ledgers * ledgers: refid, time, type, subtype, aclass, asset, amount, fee, balance, wallet"
+        },
+        "starttm": {
+          "type": "integer",
+          "required": false,
+          "description": "UNIX timestamp for report start time (default 1st of the current month)"
+        },
+        "endtm": {
+          "type": "integer",
+          "required": false,
+          "description": "UNIX timestamp for report end time (default now)"
+        }
+      }
+    },
+    "spot:Delete Export": {
+      "description": "Delete Export Report",
+      "fields": {
+        "id": {
+          "type": "string",
+          "required": true,
+          "description": "ID of report to delete or cancel"
+        },
+        "type": {
+          "type": "string",
+          "required": true,
+          "enum": [
+            "cancel",
+            "delete"
+          ],
+          "description": "delete can only be used for reports that have already been processed. Use cancel for queued or processing reports."
+        }
+      }
+    },
+    "spot:Validate Order": {
+      "description": "Add Order",
+      "fields": {
+        "userref": {
+          "type": "integer",
+          "required": false,
+          "format": "int32",
+          "description": "This is an optional non-unique, numeric identifier which can associated with a number of orders by the client. This field is mutually exclusive with cl_ord_id parameter. userref is an optional user-specified integer id that can be associated with any number of orders. Many clients choose a userref c"
+        },
+        "cl_ord_id": {
+          "type": "string",
+          "required": false,
+          "description": "Adds an alphanumeric client order identifier which uniquely identifies an open order for each client. This field is mutually exclusive with userref parameter. The cl_ord_id parameter can be one of the following formats: * \u2022 Long UUID: 6d1b345e-2821-40e2-ad83-4ecb18a06876 32 hex characters separated "
+        },
+        "ordertype": {
+          "type": "string",
+          "required": true,
+          "enum": [
+            "market",
+            "limit",
+            "iceberg",
+            "stop-loss",
+            "take-profit",
+            "stop-loss-limit",
+            "take-profit-limit",
+            "trailing-stop",
+            "trailing-stop-limit",
+            "settle-position"
+          ],
+          "description": "The execution model of the order."
+        },
+        "type": {
+          "type": "string",
+          "required": true,
+          "enum": [
+            "buy",
+            "sell"
+          ],
+          "description": "Order direction (buy/sell)"
+        },
+        "volume": {
+          "type": "string",
+          "required": true,
+          "description": "Order quantity in terms of the base asset > Note: Volume can be specified as 0 for closing margin orders to automatically fill the requisite quantity."
+        },
+        "displayvol": {
+          "type": "string",
+          "required": false,
+          "description": "For iceberg orders only, it defines the quantity to show in the book while the rest of order quantity remains hidden. Minimum value is 1 / 15 of volume."
+        },
+        "pair": {
+          "type": "string",
+          "required": true,
+          "description": "Asset pair id or altname"
+        },
+        "asset_class": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "tokenized_asset"
+          ],
+          "description": "This parameter is required on requests for non-crypto pairs, i.e. use tokenized_asset for xStocks."
+        },
+        "price": {
+          "type": "string",
+          "required": false,
+          "description": "Price: * \u2022 Limit price for limit and iceberg orders * \u2022 Trigger price for stop-loss, stop-loss-limit, take-profit, take-profit-limit, trailing-stop and trailing-stop-limit orders Notes: * \u2022 Relative Prices: Either price or price2 can be preceded by +, -, or # to specify the order price as an offset "
+        },
+        "price2": {
+          "type": "string",
+          "required": false,
+          "description": "Secondary Price: * \u2022 Limit price for stop-loss-limit, take-profit-limit and trailing-stop-limit orders Note: * \u2022 Trailing Stops: Must use a relative price for this field, namely one of the + or - prefixes. This will provide the offset from the trigger price to the limit price, i.e. +0 would set the "
+        },
+        "trigger": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "index",
+            "last"
+          ],
+          "default": "last",
+          "description": "Price signal used to trigger stop-loss, stop-loss-limit, take-profit, take-profit-limit, trailing-stop and trailing-stop-limit orders Notes: * \u2022 This trigger type will also be used for any associated conditional close orders. * \u2022 To keep triggers serviceable, the last price will be used as fallback "
+        },
+        "leverage": {
+          "type": "string",
+          "required": false,
+          "description": "Amount of leverage desired (default: none)"
+        },
+        "reduce_only": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "If true, order will only reduce a currently open position, not increase it or open a new position."
+        },
+        "stptype": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "cancel-newest",
+            "cancel-oldest",
+            "cancel-both"
+          ],
+          "default": "cancel-newest",
+          "description": "Self Trade Prevention (STP) is a protection feature to prevent users from inadvertently or deliberately trading against themselves. To prevent a self-match, one of the following STP modes can be used to define which order(s) will be expired: * \u2022 cancel-newest: arriving order will be canceled * \u2022 can"
+        },
+        "oflags": {
+          "type": "string",
+          "required": false,
+          "description": "Comma delimited list of order flags * \u2022 post post-only order (available when ordertype = limit) * \u2022 fcib prefer fee in base currency (default if selling) * \u2022 fciq prefer fee in quote currency (default if buying, mutually exclusive with fcib) * \u2022 nompp (DEPRECATED) \u2014 disabling Market Price Protection"
+        },
+        "timeinforce": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "GTC",
+            "IOC",
+            "GTD",
+            "FOK"
+          ],
+          "default": "GTC",
+          "description": "Time-in-force of the order to specify how long it should remain in the order book before being cancelled. GTC (Good-'til-cancelled) is default if the parameter is omitted. IOC (immediate-or-cancel) will immediately execute the amount possible and cancel any remaining balance rather than resting in t"
+        },
+        "starttm": {
+          "type": "string",
+          "required": false,
+          "description": "Scheduled start time, can be specified as an absolute timestamp or as a number of seconds in the future: * \u2022 0 now (default) * \u2022 = unix timestamp of start time * \u2022 + = schedule start time seconds from now * Note that URL encoding of the + character changes it to a space, so please use %2b followed b"
+        },
+        "expiretm": {
+          "type": "string",
+          "required": false,
+          "description": "Expiry time on GTD orders can be set up to one month in future, it is specified as an absolute timestamp or as a number of seconds from now: * \u2022 0 no expiration (default) * \u2022 = unix timestamp of expiration time * \u2022 + = expire seconds from now, minimum 5 seconds * Note that URL encoding of the + char"
+        },
+        "close[ordertype]": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "limit",
+            "iceberg",
+            "stop-loss",
+            "take-profit",
+            "stop-loss-limit",
+            "take-profit-limit",
+            "trailing-stop",
+            "trailing-stop-limit"
+          ],
+          "description": "Conditional close order type > Note: Conditional close orders are triggered by execution of the primary order in the same quantity and opposite direction, but once triggered are __independent orders__ that may reduce or increase net position"
+        },
+        "close[price]": {
+          "type": "string",
+          "required": false,
+          "description": "Conditional close order price"
+        },
+        "close[price2]": {
+          "type": "string",
+          "required": false,
+          "description": "Conditional close order price2"
+        },
+        "deadline": {
+          "type": "string",
+          "required": false,
+          "description": "RFC3339 timestamp (e.g. 2021-04-01T00:18:45Z) after which the matching engine should reject the new order request, in presence of latency or order queueing: min now() + 2 seconds, max now() + 60 seconds."
+        },
+        "broker": {
+          "type": "string",
+          "required": false,
+          "description": "Broker IIBAN (Partner's Kraken IIBAN)"
+        }
+      }
+    },
+    "spot:Retrieve Export": {
+      "description": "Retrieve Data Export",
+      "fields": {
+        "id": {
+          "type": "string",
+          "required": true,
+          "description": "Report ID to retrieve"
+        }
+      }
+    },
+    "spot:Deposit Methods": {
+      "description": "Get Deposit Methods",
+      "fields": {
+        "asset": {
+          "type": "string",
+          "required": true,
+          "description": "Asset being deposited"
+        },
+        "aclass": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "currency",
+            "tokenized_asset"
+          ],
+          "default": "currency",
+          "description": "Asset class being deposited (optional)"
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Deposit Addresses": {
+      "description": "Get Deposit Addresses",
+      "fields": {
+        "asset": {
+          "type": "string",
+          "required": true,
+          "description": "Asset being deposited"
+        },
+        "aclass": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "currency",
+            "tokenized_asset"
+          ],
+          "default": "currency",
+          "description": "Asset class being deposited"
+        },
+        "method": {
+          "type": "string",
+          "required": true,
+          "description": "Name of the deposit method"
+        },
+        "amount": {
+          "type": "string",
+          "required": false,
+          "description": "Amount you wish to deposit (only required for method=Bitcoin Lightning)"
+        }
+      }
+    },
+    "spot:Deposit History": {
+      "description": "Get Status of Recent Deposits",
+      "fields": {
+        "asset": {
+          "type": "string",
+          "required": false,
+          "description": "Filter for specific asset being deposited"
+        },
+        "aclass": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "currency",
+            "tokenized_asset"
+          ],
+          "default": "currency",
+          "description": "Filter for specific asset class being deposited"
+        },
+        "method": {
+          "type": "string",
+          "required": false,
+          "description": "Filter for specific name of deposit method"
+        },
+        "start": {
+          "type": "string",
+          "required": false,
+          "description": "Start timestamp, deposits created strictly before will not be included in the response"
+        },
+        "end": {
+          "type": "string",
+          "required": false,
+          "description": "End timestamp, deposits created strictly after will be not be included in the response"
+        },
+        "cursor": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "true/false to enable/disable paginated response (boolean) or cursor for next page of results (string)"
+        },
+        "limit": {
+          "type": "integer",
+          "required": false,
+          "default": 25,
+          "description": "Number of results to include per page"
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Create Deposit Address": {
+      "description": "Get Deposit Addresses",
+      "fields": {
+        "asset": {
+          "type": "string",
+          "required": true,
+          "description": "Asset being deposited"
+        },
+        "aclass": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "currency",
+            "tokenized_asset"
+          ],
+          "default": "currency",
+          "description": "Asset class being deposited"
+        },
+        "method": {
+          "type": "string",
+          "required": true,
+          "description": "Name of the deposit method"
+        },
+        "amount": {
+          "type": "string",
+          "required": false,
+          "description": "Amount you wish to deposit (only required for method=Bitcoin Lightning)"
+        }
+      }
+    },
+    "spot:Withdrawal Methods": {
+      "description": "Get Withdrawal Methods",
+      "fields": {
+        "asset": {
+          "type": "string",
+          "required": false,
+          "description": "Filter methods for specific asset"
+        },
+        "aclass": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "currency",
+            "tokenized_asset"
+          ],
+          "default": "currency",
+          "description": "Filter methods for specific asset class"
+        },
+        "network": {
+          "type": "string",
+          "required": false,
+          "description": "Filter methods for specific network"
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Withdrawal Addresses": {
+      "description": "Get Withdrawal Addresses",
+      "fields": {
+        "asset": {
+          "type": "string",
+          "required": false,
+          "description": "Filter addresses for specific asset"
+        },
+        "aclass": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "currency",
+            "tokenized_asset"
+          ],
+          "default": "currency",
+          "description": "Filter addresses for specific asset class"
+        },
+        "method": {
+          "type": "string",
+          "required": false,
+          "description": "Filter addresses for specific method"
+        },
+        "key": {
+          "type": "string",
+          "required": false,
+          "description": "Find address for by withdrawal key name, as set up on your account"
+        },
+        "verified": {
+          "type": "boolean",
+          "required": false,
+          "description": "Filter by verification status of the withdrawal address. Withdrawal addresses successfully completing email confirmation will have a verification status of true."
+        }
+      }
+    },
+    "spot:Withdrawal Fees and Limits": {
+      "description": "Get Withdrawal Information",
+      "fields": {
+        "asset": {
+          "type": "string",
+          "required": true,
+          "description": "Asset being withdrawn"
+        },
+        "key": {
+          "type": "string",
+          "required": true,
+          "description": "Withdrawal key name, as set up on your account"
+        },
+        "amount": {
+          "type": "string",
+          "required": true,
+          "description": "Amount to be withdrawn"
+        }
+      }
+    },
+    "spot:Withdrawal History": {
+      "description": "Get Status of Recent Withdrawals",
+      "fields": {
+        "asset": {
+          "type": "string",
+          "required": false,
+          "description": "Filter for specific asset being withdrawn"
+        },
+        "aclass": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "currency",
+            "tokenized_asset"
+          ],
+          "default": "currency",
+          "description": "Filter for specific asset class being withdrawn"
+        },
+        "method": {
+          "type": "string",
+          "required": false,
+          "description": "Filter for specific name of withdrawal method"
+        },
+        "start": {
+          "type": "string",
+          "required": false,
+          "description": "Start timestamp, withdrawals created strictly before will not be included in the response"
+        },
+        "end": {
+          "type": "string",
+          "required": false,
+          "description": "End timestamp, withdrawals created strictly after will be not be included in the response"
+        },
+        "cursor": {
+          "type": "boolean",
+          "required": false,
+          "description": "true/false to enable/disable paginated response (boolean) or cursor for next page of results (string), default false"
+        },
+        "limit": {
+          "type": "integer",
+          "required": false,
+          "default": 500,
+          "description": "Number of results to include per page"
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Withdraw Funds": {
+      "description": "Withdraw Funds",
+      "fields": {
+        "asset": {
+          "type": "string",
+          "required": true,
+          "description": "Asset being withdrawn"
+        },
+        "aclass": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "currency",
+            "tokenized_asset"
+          ],
+          "default": "currency",
+          "description": "Specify the asset class of the asset being withdrawn"
+        },
+        "key": {
+          "type": "string",
+          "required": true,
+          "description": "Withdrawal key name, as set up on your account"
+        },
+        "address": {
+          "type": "string",
+          "required": false,
+          "description": "Optional, crypto address that can be used to confirm address matches key (will return Invalid withdrawal address error if different)"
+        },
+        "amount": {
+          "type": "string",
+          "required": true,
+          "description": "Amount to be withdrawn"
+        },
+        "max_fee": {
+          "type": "string",
+          "required": false,
+          "description": "Optional, if the processed withdrawal fee is higher than max_fee, withdrawal will fail with EFunding:Max fee exceeded"
+        },
+        "rebase_multiplier": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "rebased",
+            "base"
+          ],
+          "default": "rebased",
+          "description": "Optional parameter for viewing xStocks data. - rebased: Display in terms of underlying equity. - base: Display in terms of SPV tokens."
+        }
+      }
+    },
+    "spot:Cancel Withdrawal": {
+      "description": "Request Withdrawal Cancellation",
+      "fields": {
+        "asset": {
+          "type": "string",
+          "required": true,
+          "description": "Asset being withdrawn"
+        },
+        "refid": {
+          "type": "string",
+          "required": true,
+          "description": "Withdrawal reference ID"
+        }
+      }
+    },
+    "spot:Transfer Between Wallets": {
+      "description": "Request Wallet Transfer",
+      "fields": {
+        "asset": {
+          "type": "string",
+          "required": true,
+          "description": "Asset to transfer (asset ID or altname)"
+        },
+        "from": {
+          "type": "string",
+          "required": true,
+          "enum": [
+            "Spot Wallet"
+          ],
+          "description": "Source wallet"
+        },
+        "to": {
+          "type": "string",
+          "required": true,
+          "enum": [
+            "Futures Wallet"
+          ],
+          "description": "Destination wallet"
+        },
+        "amount": {
+          "type": "string",
+          "required": true,
+          "description": "Amount to transfer"
+        }
+      }
+    },
+    "spot:Earn Strategies": {
+      "description": "List Earn Strategies",
+      "fields": {
+        "ascending": {
+          "type": "boolean",
+          "required": false,
+          "description": "true to sort ascending, false (the default) for descending."
+        },
+        "asset": {
+          "type": "string",
+          "required": false,
+          "description": "Filter strategies by asset name"
+        },
+        "cursor": {
+          "type": "string",
+          "required": false,
+          "description": "None to start at beginning/end, otherwise next page ID"
+        },
+        "limit": {
+          "type": "integer",
+          "required": false,
+          "format": "uint16",
+          "description": "How many items to return per page. Note that the limit may be cap'd to lower value in the application code."
+        },
+        "lock_type": {
+          "type": "array",
+          "required": false,
+          "description": "Filter strategies by lock type",
+          "items": {
+            "type": "string",
+            "required": false,
+            "enum": [
+              "flex",
+              "bonded",
+              "timed",
+              "instant"
+            ],
+            "description": "Type of a strategy"
+          }
+        }
+      }
+    },
+    "spot:Earn Allocations": {
+      "description": "List Earn Allocations",
+      "fields": {
+        "ascending": {
+          "type": "boolean",
+          "required": false,
+          "description": "true to sort ascending, false (the default) for descending."
+        },
+        "converted_asset": {
+          "type": "string",
+          "required": false,
+          "description": "A secondary currency to express the value of your allocations (the default is USD)."
+        },
+        "hide_zero_allocations": {
+          "type": "boolean",
+          "required": false,
+          "description": "Omit entries for strategies that were used in the past but now they don't hold any allocation (the default is false)"
+        }
+      }
+    },
+    "spot:Earn Allocate": {
+      "description": "Allocate Earn Funds",
+      "fields": {
+        "amount": {
+          "type": "string",
+          "required": true,
+          "description": "The amount to allocate."
+        },
+        "strategy_id": {
+          "type": "string",
+          "required": true,
+          "description": "A unique identifier of the chosen earn strategy, as returned from /0/private/Earn/Strategies."
+        }
+      }
+    },
+    "spot:Earn Deallocate": {
+      "description": "Deallocate Earn Funds",
+      "fields": {
+        "amount": {
+          "type": "string",
+          "required": true,
+          "description": "The amount to deallocate. This field is required."
+        },
+        "strategy_id": {
+          "type": "string",
+          "required": true,
+          "description": "A unique identifier per earn strategy."
+        }
+      }
+    },
+    "spot:Earn Allocation Status": {
+      "description": "Get Allocation Status",
+      "fields": {
+        "strategy_id": {
+          "type": "string",
+          "required": true,
+          "description": "ID of the earn strategy, call Earn/Strategies to list available strategies"
+        }
+      }
+    },
+    "spot:Earn Deallocation Status": {
+      "description": "Get Deallocation Status",
+      "fields": {
+        "strategy_id": {
+          "type": "string",
+          "required": true,
+          "description": "ID of the earn strategy, call Earn/Strategies to list available strategies"
+        }
+      }
+    },
+    "spot:Create Subaccount": {
+      "description": "Create Subaccount",
+      "fields": {
+        "username": {
+          "type": "string",
+          "required": true,
+          "description": "Username for the subaccount"
+        },
+        "email": {
+          "type": "string",
+          "required": true,
+          "description": "Email address for the subaccount"
+        }
+      }
+    },
+    "spot:Transfer Between Accounts": {
+      "description": "Account Transfer",
+      "fields": {
+        "asset": {
+          "type": "string",
+          "required": true,
+          "description": "Asset being transferred"
+        },
+        "asset_class": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "currency",
+            "tokenized_asset"
+          ],
+          "default": "currency",
+          "description": "Specify the asset class of the asset being transferred"
+        },
+        "amount": {
+          "type": "string",
+          "required": true,
+          "description": "Amount of asset to transfer"
+        },
+        "from": {
+          "type": "string",
+          "required": true,
+          "description": "Public account ID of the source account (Example ABCD 1234 EFGH 5678)"
+        },
+        "to": {
+          "type": "string",
+          "required": true,
+          "description": "Public account ID of the destination account (Example ABCD 1234 EFGH 5678)"
+        }
+      }
+    },
+    "futures:Instruments": {
+      "description": "Get instruments",
+      "fields": {
+        "contractType": {
+          "type": "array",
+          "required": false,
+          "items": {
+            "type": "string",
+            "required": false,
+            "enum": [
+              "futures_inverse",
+              "futures_vanilla",
+              "flexible_futures",
+              "options",
+              "all"
+            ]
+          },
+          "description": "Contract type(s) to return statuses for. By default, includes all futures instrument types. Multi-value example: ?contractType=futures_inverse&contractType=futures_vanilla"
+        },
+        "expired": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "If true, return only expired instruments Defaults to false, in which case only non-expired instruments are returned"
+        }
+      }
+    },
+    "futures:Tickers": {
+      "description": "Get tickers",
+      "fields": {
+        "contractType": {
+          "type": "array",
+          "required": false,
+          "items": {
+            "type": "string",
+            "required": false,
+            "enum": [
+              "futures_inverse",
+              "futures_vanilla",
+              "flexible_futures",
+              "options",
+              "all"
+            ]
+          },
+          "description": "Contract type(s) to return statuses for. By default, includes all futures instrument types. Multi-value example: ?contractType=futures_inverse&contractType=futures_vanilla"
+        },
+        "symbol": {
+          "type": "array",
+          "required": false,
+          "items": {
+            "type": "string",
+            "required": false,
+            "description": "Market symbol"
+          },
+          "description": "Market symbol(s) to filter tickers by. Symbols are case-insensitive. Multi-value example: ?symbol=PF_BTCUSD&symbol=pf_ethusd"
+        }
+      }
+    },
+    "futures:Order Book": {
+      "description": "Get orderbook",
+      "fields": {
+        "symbol": {
+          "type": "string",
+          "required": true,
+          "description": "The symbol of the Futures."
+        }
+      }
+    },
+    "futures:Recent Trades": {
+      "description": "Get trade history",
+      "fields": {
+        "symbol": {
+          "type": "string",
+          "required": true,
+          "description": "The symbol of the Futures."
+        },
+        "lastTime": {
+          "type": "string",
+          "required": false,
+          "description": "Returns the last 100 trades from the specified lastTime value."
+        },
+        "includeMTFData": {
+          "type": "boolean",
+          "required": false,
+          "default": true
+        }
+      }
+    },
+    "futures:Fee Schedules": {
+      "description": "Get fee schedules",
+      "fields": {}
+    },
+    "futures:Instrument Status": {
+      "description": "Get instrument status list",
+      "fields": {
+        "contractType": {
+          "type": "array",
+          "required": false,
+          "items": {
+            "type": "string",
+            "required": false,
+            "enum": [
+              "futures_inverse",
+              "futures_vanilla",
+              "flexible_futures",
+              "options",
+              "all"
+            ]
+          },
+          "description": "Contract type(s) to return statuses for. By default, includes all futures instrument types. Multi-value example: ?contractType=futures_inverse&contractType=futures_vanilla"
+        }
+      }
+    },
+    "futures:Funding Rates": {
+      "description": "Historical funding rates",
+      "fields": {
+        "symbol": {
+          "type": "string",
+          "required": true,
+          "description": "Market symbol."
+        }
+      }
+    },
+    "futures:Accounts": {
+      "description": "Get wallets",
+      "fields": {}
+    },
+    "futures:Open Orders": {
+      "description": "Get open orders",
+      "fields": {}
+    },
+    "futures:Positions": {
+      "description": "Get open positions",
+      "fields": {}
+    },
+    "futures:Fills": {
+      "description": "Get your fills",
+      "fields": {
+        "lastFillTime": {
+          "type": "string",
+          "required": false,
+          "description": "If not provided, returns the last 100 fills in any futures contract. If provided, returns the 100 entries before lastFillTime."
+        }
+      }
+    },
+    "futures:Order Status": {
+      "description": "Get Specific Orders' Status",
+      "fields": {
+        "orderIds": {
+          "type": "array",
+          "required": false,
+          "items": {
+            "type": "string",
+            "required": false,
+            "format": "uuid"
+          },
+          "description": "UIDs associated with orders or triggers."
+        },
+        "cliOrdIds": {
+          "type": "array",
+          "required": false,
+          "items": {
+            "type": "string",
+            "required": false
+          },
+          "description": "Client Order IDs associated with orders or triggers."
+        }
+      }
+    },
+    "futures:Place Order": {
+      "description": "Send order",
+      "fields": {
+        "processBefore": {
+          "type": "string",
+          "required": false,
+          "format": "date-time",
+          "description": "The time before which the request should be processed, otherwise it is rejected."
+        },
+        "orderType": {
+          "type": "string",
+          "required": true,
+          "enum": [
+            "lmt",
+            "post",
+            "ioc",
+            "mkt",
+            "stp",
+            "take_profit",
+            "trailing_stop",
+            "fok"
+          ],
+          "description": "The order type: - lmt - a limit order - post - a post-only limit order - mkt - an immediate-or-cancel order with 1% price protection - stp - a stop order - take_profit - a take profit order - ioc - an immediate-or-cancel order - trailing_stop - a trailing stop order - fok - fill or kill order"
+        },
+        "symbol": {
+          "type": "string",
+          "required": true,
+          "description": "The symbol of the Futures"
+        },
+        "side": {
+          "type": "string",
+          "required": true,
+          "enum": [
+            "buy",
+            "sell"
+          ],
+          "description": "The direction of the order."
+        },
+        "size": {
+          "type": "number",
+          "required": true,
+          "description": "The size associated with the order. Note that different Futures have different contract sizes."
+        },
+        "limitPrice": {
+          "type": "number",
+          "required": false,
+          "description": "The limit price associated with the order. Note that for stop orders, limitPrice denotes the worst price at which the stp or take_profit order can get filled at. If no limitPrice is provided the stp or take_profit order will trigger a market order. If placing a trailing_stop order then leave undefin"
+        },
+        "stopPrice": {
+          "type": "number",
+          "required": false,
+          "description": "The stop price associated with a stop or take profit order. Required if orderType is stp or take_profit, but if placing a trailing_stop then leave undefined. Note that for stop orders, limitPrice denotes the worst price at which the stp or take_profit order can get filled at. If no limitPrice is pro"
+        },
+        "cliOrdId": {
+          "type": "string",
+          "required": false,
+          "description": "The order identity that is specified from the user. It must be globally unique."
+        },
+        "triggerSignal": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "mark",
+            "index",
+            "last"
+          ],
+          "description": "If placing a stp, take_profit or trailing_stop, the signal used for trigger. - mark - the mark price - index - the index price - last - the last executed trade"
+        },
+        "reduceOnly": {
+          "type": "boolean",
+          "required": false,
+          "description": "Set as true if you wish the order to only reduce an existing position. Any order which increases an existing position will be rejected. Default false."
+        },
+        "trailingStopMaxDeviation": {
+          "type": "number",
+          "required": false,
+          "minimum": 0.1,
+          "maximum": 50,
+          "description": "Required if the order type is trailing_stop. Maximum value of 50%, minimum value of 0.1% for 'PERCENT' 'maxDeviationUnit'. Is the maximum distance the trailing stop's trigger price may trail behind the requested trigger signal. It defines the threshold at which the trigger price updates."
+        },
+        "trailingStopDeviationUnit": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "PERCENT",
+            "QUOTE_CURRENCY"
+          ],
+          "description": "Required if the order type is trailing_stop. This defines how the trailing trigger price is calculated from the requested trigger signal. For example, if the max deviation is set to 10, the unit is 'PERCENT', and the underlying order is a sell, then the trigger price will never be more then 10% belo"
+        },
+        "limitPriceOffsetValue": {
+          "type": "number",
+          "required": false,
+          "description": "Can only be set for triggers, e.g. order types take_profit, stop and trailing_stop. If set, limitPriceOffsetUnit must be set as well. This defines a relative limit price depending on the trigger stopPrice. The price is determined when the trigger is activated by the triggerSignal. The offset can be "
+        },
+        "limitPriceOffsetUnit": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "QUOTE_CURRENCY",
+            "PERCENT"
+          ],
+          "description": "Can only be set together with limitPriceOffsetValue. This defines the unit for the relative limit price distance from the trigger's stopPrice."
+        },
+        "broker": {
+          "type": "string",
+          "required": false,
+          "format": "iiban",
+          "description": "Valid Broker IIBAN on whose behalf the order is sent. The format must follow the usual IIBAN pattern XXXX YYYY ZZZZ WWWW or machine pattern XXXXYYYYZZZZWWWW."
+        }
+      }
+    },
+    "futures:Edit Order": {
+      "description": "Edit order",
+      "fields": {
+        "processBefore": {
+          "type": "string",
+          "required": false,
+          "format": "date-time",
+          "description": "The time before which the request should be processed, otherwise it is rejected."
+        },
+        "orderId": {
+          "type": "string",
+          "required": false,
+          "description": "ID of the order you wish to edit. (Required if CliOrdId is not included)"
+        },
+        "cliOrdId": {
+          "type": "string",
+          "required": false,
+          "description": "The order identity that is specified from the user. It must be globally unique (Required if orderId is not included)"
+        },
+        "size": {
+          "type": "number",
+          "required": false,
+          "description": "The size associated with the order"
+        },
+        "limitPrice": {
+          "type": "number",
+          "required": false,
+          "description": "The limit price associated with the order. Must not exceed the tick size of the contract."
+        },
+        "stopPrice": {
+          "type": "number",
+          "required": false,
+          "description": "The stop price associated with a stop order. Required if old orderType is stp. Must not exceed tick size of the contract. Note that for stp orders, limitPrice is also required and denotes the worst price at which the stp order can get filled."
+        },
+        "trailingStopMaxDeviation": {
+          "type": "number",
+          "required": false,
+          "minimum": 0.1,
+          "maximum": 50,
+          "description": "Only relevant for trailing stop orders. Maximum value of 50%, minimum value of 0.1% for 'PERCENT' 'maxDeviationUnit'. Is the maximum distance the trailing stop's trigger price may trail behind the requested trigger signal. It defines the threshold at which the trigger price updates."
+        },
+        "trailingStopDeviationUnit": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "PERCENT",
+            "QUOTE_CURRENCY"
+          ],
+          "description": "Only relevant for trailing stop orders. This defines how the trailing trigger price is calculated from the requested trigger signal. For example, if the max deviation is set to 10, the unit is 'PERCENT', and the underlying order is a sell, then the trigger price will never be more then 10% below the"
+        },
+        "qtyMode": {
+          "type": "string",
+          "required": false,
+          "enum": [
+            "ABSOLUTE",
+            "RELATIVE"
+          ],
+          "description": "Determines how the updated size is interpreted, defaulting to 'RELATIVE'. 'ABSOLUTE' means that the total order size, including past fills, is set to size. 'RELATIVE' means that the current open order size is set to size."
+        }
+      }
+    },
+    "futures:Cancel Order": {
+      "description": "Cancel order",
+      "fields": {
+        "processBefore": {
+          "type": "string",
+          "required": false,
+          "format": "date-time",
+          "description": "The time before which the request should be processed, otherwise it is rejected."
+        },
+        "order_id": {
+          "type": "string",
+          "required": false,
+          "description": "The unique identifier of the order to be cancelled."
+        },
+        "cliOrdId": {
+          "type": "string",
+          "required": false,
+          "description": "The client unique identifier of the order to be cancelled."
+        }
+      }
+    },
+    "futures:Cancel All Orders": {
+      "description": "Cancel all orders",
+      "fields": {
+        "symbol": {
+          "type": "string",
+          "required": false,
+          "description": "A futures product to cancel all open orders."
+        }
+      }
+    },
+    "futures:Cancel All Orders After": {
+      "description": "Dead man's switch",
+      "fields": {
+        "timeout": {
+          "type": "number",
+          "required": false,
+          "format": "uint32",
+          "description": "The timeout specified in seconds."
+        }
+      }
+    },
+    "futures:Batch Orders": {
+      "description": "Batch order management",
+      "fields": {
+        "processBefore": {
+          "type": "string",
+          "required": false,
+          "format": "date-time",
+          "description": "The time before which the request should be processed, otherwise it is rejected."
+        },
+        "json": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "batchOrder": {
+              "type": "array",
+              "required": true,
+              "maxItems": 500,
+              "description": "A list containing structures of order sending and order cancellation instructions. Instructions are applied in the order given, except that on markets with a maker protection window each liquidity-taking instruction is held on its own for the window while every other instruction, cancels included, i",
+              "items": {
+                "type": "object",
+                "required": false,
+                "properties": {
+                  "order": {
+                    "type": "string",
+                    "required": true,
+                    "enum": [
+                      "send",
+                      "edit",
+                      "cancel"
+                    ],
+                    "description": "Place, edit or cancel an order in this batch."
+                  },
+                  "order_tag": {
+                    "type": "string",
+                    "required": false,
+                    "description": "An arbitrary string provided client-side to tag the order for the purpose of mapping order sending instructions to the API's response."
+                  },
+                  "orderType": {
+                    "type": "string",
+                    "required": false,
+                    "enum": [
+                      "lmt",
+                      "post",
+                      "ioc",
+                      "mkt",
+                      "stp",
+                      "take_profit",
+                      "trailing_stop",
+                      "fok"
+                    ],
+                    "description": "The order type: - lmt - a limit order - post - a post-only limit order - mkt - an immediate-or-cancel order with 1% price protection - stp - a stop order - take_profit - a take profit order - ioc - an immediate-or-cancel order - trailing_stop - a trailing stop order - fok - fill-or-kill order"
+                  },
+                  "symbol": {
+                    "type": "string",
+                    "required": false,
+                    "description": "The symbol of the Futures."
+                  },
+                  "side": {
+                    "type": "string",
+                    "required": false,
+                    "enum": [
+                      "buy",
+                      "sell"
+                    ],
+                    "description": "The direction of the order."
+                  },
+                  "size": {
+                    "type": "number",
+                    "required": false,
+                    "description": "The size associated with the order."
+                  },
+                  "limitPrice": {
+                    "type": "number",
+                    "required": false,
+                    "description": "The limit price associated with the order."
+                  },
+                  "stopPrice": {
+                    "type": "number",
+                    "required": false,
+                    "description": "The stop price associated with a stop order. Required if old orderType is stp. Note that for stp orders, limitPrice is also required and denotes the worst price at which the stp order can get filled."
+                  },
+                  "cliOrdId": {
+                    "type": "string",
+                    "required": false,
+                    "description": "Unique client order identifier."
+                  },
+                  "triggerSignal": {
+                    "type": "string",
+                    "required": false,
+                    "enum": [
+                      "mark",
+                      "index",
+                      "last"
+                    ]
+                  },
+                  "reduceOnly": {
+                    "type": "boolean",
+                    "required": false,
+                    "default": false,
+                    "description": "Set as 'true' if you wish the order to only reduce an existing position. Any order which increases an existing position will be rejected. Default 'false'."
+                  },
+                  "trailingStopMaxDeviation": {
+                    "type": "number",
+                    "required": false,
+                    "minimum": 0.1,
+                    "maximum": 50,
+                    "description": "Only relevant for trailing stop orders. Maximum value of 50%, minimum value of 0.1% for 'PERCENT' 'maxDeviationUnit'. Is the maximum distance the trailing stop's trigger price may trail behind the requested trigger signal. It defines the threshold at which the trigger price updates."
+                  },
+                  "trailingStopDeviationUnit": {
+                    "type": "string",
+                    "required": false,
+                    "enum": [
+                      "PERCENT",
+                      "QUOTE_CURRENCY"
+                    ],
+                    "description": "Only relevant for trailing stop orders. This defines how the trailing trigger price is calculated from the requested trigger signal. For example, if the max deviation is set to 10, the unit is 'PERCENT', and the underlying order is a sell, then the trigger price will never be more then 10% below the"
+                  },
+                  "order_id": {
+                    "type": "string",
+                    "required": false,
+                    "format": "uuid",
+                    "description": "Order ID."
+                  },
+                  "qtyMode": {
+                    "type": "string",
+                    "required": false,
+                    "enum": [
+                      "ABSOLUTE",
+                      "RELATIVE"
+                    ],
+                    "description": "Determines how the updated size is interpreted, defaulting to 'RELATIVE'. 'ABSOLUTE' means that the total order size, including past fills, is set to size. 'RELATIVE' means that the current open order size is set to size."
+                  }
+                }
+              }
+            }
+          },
+          "description": "Contains the request body as a String"
+        },
+        "broker": {
+          "type": "string",
+          "required": false,
+          "format": "iiban",
+          "description": "Valid Broker IIBAN on whose behalf the order is sent. The format must follow the usual IIBAN pattern XXXX YYYY ZZZZ WWWW or machine pattern XXXXYYYYZZZZWWWW."
+        }
+      }
+    },
+    "futures:Leverage Preferences": {
+      "description": "Get leverage settings",
+      "fields": {}
+    },
+    "futures:Set Leverage": {
+      "description": "Set leverage settings",
+      "fields": {
+        "symbol": {
+          "type": "string",
+          "required": true,
+          "description": "Symbol for the leverage preference."
+        },
+        "maxLeverage": {
+          "type": "number",
+          "required": false,
+          "description": "Max leverage to set. When present, the symbol's margin mode will be set to \"isolated\". When missing, the symbol's margin mode will be set to \"cross\"."
+        }
+      }
+    },
+    "futures:PnL Preferences": {
+      "description": "Get PNL currency preferences",
+      "fields": {}
+    },
+    "futures:Set PnL Preference": {
+      "description": "Set PNL currency preference",
+      "fields": {
+        "symbol": {
+          "type": "string",
+          "required": false,
+          "description": "The symbol for the PnL preference. Omit to set the account-wide preference, which applies to every market that does not override it. Naming the platform's own currency for a market keeps that market on it, overriding the account-wide preference."
+        },
+        "pnlPreference": {
+          "type": "string",
+          "required": true,
+          "description": "The asset in which profit will be realised for the specific symbol."
+        }
+      }
+    },
+    "futures:Notifications": {
+      "description": "Get notifications",
+      "fields": {}
+    },
+    "futures:Transfers": {
+      "description": "List deposits and withdrawals (transfers)",
+      "fields": {
+        "lastTransferTime": {
+          "type": "string",
+          "required": false
+        }
+      }
+    },
+    "futures:Transfer Funds": {
+      "description": "Initiate wallet transfer",
+      "fields": {
+        "fromAccount": {
+          "type": "string",
+          "required": true,
+          "description": "The wallet (cash or margin account) from which funds should be debited"
+        },
+        "toAccount": {
+          "type": "string",
+          "required": true,
+          "description": "The wallet (cash or margin account) to which funds should be credited"
+        },
+        "unit": {
+          "type": "string",
+          "required": true,
+          "description": "The currency unit to transfer"
+        },
+        "amount": {
+          "type": "number",
+          "required": true,
+          "format": "decimal",
+          "description": "The amount to transfer"
+        }
+      }
+    },
+    "futures:Withdraw Funds": {
+      "description": "Initiate withdrawal to Spot wallet",
+      "fields": {
+        "currency": {
+          "type": "string",
+          "required": true,
+          "description": "The digital asset that shall be withdrawn back to spot wallet."
+        },
+        "amount": {
+          "type": "number",
+          "required": true,
+          "format": "decimal",
+          "description": "The amount of currency that shall be withdrawn back to spot wallet."
+        },
+        "sourceWallet": {
+          "type": "string",
+          "required": false,
+          "description": "The wallet from which the funds shall be withdrawn back to spot wallet. Default is \"cash\" wallet."
+        }
+      }
+    },
+    "futures:Unwind Queue": {
+      "description": "Get position percentile of unwind queue",
+      "fields": {}
+    },
+    "futures:Assignment Programs": {
+      "description": "List assignment programs",
+      "fields": {}
+    },
+    "futures:Fee Schedule Volumes": {
+      "description": "Get fee schedule volumes",
+      "fields": {}
+    },
+    "futures:Subaccounts": {
+      "description": "Get subaccounts",
+      "fields": {}
+    },
+    "futures:Trading Instruments": {
+      "description": "Get trading instruments",
+      "fields": {
+        "contractType": {
+          "type": "array",
+          "required": false,
+          "items": {
+            "type": "string",
+            "required": false,
+            "enum": [
+              "futures_inverse",
+              "futures_vanilla",
+              "flexible_futures",
+              "options",
+              "all"
+            ]
+          },
+          "description": "Contract type(s) to return statuses for. By default, includes all futures instrument types. Multi-value example: ?contractType=futures_inverse&contractType=futures_vanilla"
+        }
+      }
+    }
+  }
+}

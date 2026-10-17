@@ -1,5 +1,6 @@
 import { spawn } from 'node:child_process';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, writeFile, unlink } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
 import { Credentials } from './client';
 
 export interface CliCommand {
@@ -24,7 +25,7 @@ export function cliArgs(command: CliCommand, inputs: Record<string, unknown>): s
   const args = [...path];
   for (const p of command.parameters) {
     const key = p.name.replace(/^--/, '').replace(/-/g, '_');
-    const value = inputs[key];
+    let value = inputs[key];
     if (value === undefined || value === null || value === '') {
       if (p.required) throw new Error(`Missing CLI parameter: ${p.name}`);
       continue;
@@ -33,6 +34,7 @@ export function cliArgs(command: CliCommand, inputs: Record<string, unknown>): s
       if (value === true) args.push(p.name);
       continue;
     }
+    if (command.name === 'order-batch' && key === 'file' && Array.isArray(value)) value = '__inline_orders__';
     const values = Array.isArray(value) ? value : [value];
     if (values.some(v => typeof v !== 'string' && typeof v !== 'number')) throw new Error(`Invalid CLI parameter: ${p.name}`);
     if (values.some(v => String(v).startsWith('-'))) throw new Error(`CLI values cannot start with '-': ${p.name}`);
@@ -43,7 +45,7 @@ export function cliArgs(command: CliCommand, inputs: Record<string, unknown>): s
   return args;
 }
 export async function executeCli(command: CliCommand, inputs: Record<string, unknown>, auth: Credentials, options: {
-  allowWrites?: boolean; workspace?: string; seconds?: number; maxEvents?: number;
+  allowWrites?: boolean; workspace?: string; seconds?: number; maxEvents?: number; otp?: string;
 } = {}): Promise<unknown> {
   const args = command.name === '__advanced' ? advancedArgs(inputs.argv) : cliArgs(command, inputs);
   const changesAccount = command.dangerous || (command.command.startsWith('kraken deposit addresses') && inputs.new === true);
@@ -65,11 +67,18 @@ export async function executeCli(command: CliCommand, inputs: Record<string, unk
   if (options.workspace && !/^(?!\.{1,2}$)[A-Za-z0-9_.-]+$/.test(options.workspace)) throw new Error('Invalid workspace name.');
   const home = process.env.KRAKEN_PIECE_HOME ?? '/var/lib/kraken-piece';
   await mkdir(home, { recursive: true });
+  let temporaryInput: string | undefined;
+  if (command.name === 'order-batch' && Array.isArray(inputs.file)) {
+    temporaryInput = home + '/batch-' + randomUUID() + '.json';
+    await writeFile(temporaryInput, JSON.stringify(inputs.file), { mode: 0o600 });
+    args[args.indexOf('__inline_orders__')] = temporaryInput;
+  }
   const env: NodeJS.ProcessEnv = {
     PATH: process.env.PATH, HOME: home, XDG_CONFIG_HOME: home + '/config',
     XDG_DATA_HOME: home + '/data', XDG_STATE_HOME: home + '/state',
     KRAKEN_API_KEY: auth.spotKey ?? '', KRAKEN_API_SECRET: auth.spotSecret ?? '',
     KRAKEN_FUTURES_API_KEY: auth.futuresKey ?? '', KRAKEN_FUTURES_API_SECRET: auth.futuresSecret ?? '',
+    ...(options.otp ? { KRAKEN_OTP: options.otp } : {}),
     ...(auth.futuresDemo ? { KRAKEN_FUTURES_URL: 'https://demo-futures.kraken.com' } : {}),
   };
   args.push('-o', 'json');
@@ -79,7 +88,7 @@ export async function executeCli(command: CliCommand, inputs: Record<string, unk
   return new Promise((resolve, reject) => {
     const child = spawn(process.env.KRAKEN_CLI_PATH ?? 'kraken', args, { env, shell: false, stdio: ['ignore', 'pipe', 'pipe'] });
     let stdout = '', stderr = '', stopped = false;
-    const secrets = [auth.spotKey, auth.spotSecret, auth.futuresKey, auth.futuresSecret].filter(Boolean) as string[];
+    const secrets = [auth.spotKey, auth.spotSecret, auth.futuresKey, auth.futuresSecret, options.otp].filter(Boolean) as string[];
     const redact = (s: string) => secrets.reduce((value, secret) => value.split(secret).join('[REDACTED]'), s);
     const stop = () => { stopped = true; child.kill('SIGTERM'); };
     const timer = setTimeout(stop, seconds * 1000);
@@ -88,9 +97,10 @@ export async function executeCli(command: CliCommand, inputs: Record<string, unk
       if (Buffer.byteLength(stdout) > 4 * 1024 * 1024 || (streaming && stdout.split('\n').filter(Boolean).length >= maxEvents)) stop();
     });
     child.stderr.on('data', chunk => { stderr = (stderr + chunk.toString()).slice(-16_000); });
-    child.on('error', () => { clearTimeout(timer); reject(new Error('Kraken CLI could not start. Install the provided Docker image or set KRAKEN_CLI_PATH on a self-hosted worker.')); });
-    child.on('close', code => {
+    child.on('error', () => { clearTimeout(timer); if (temporaryInput) void unlink(temporaryInput).catch(() => undefined); reject(new Error('Kraken CLI could not start. Install the provided Docker image or set KRAKEN_CLI_PATH on a self-hosted worker.')); });
+    child.on('close', async code => {
       clearTimeout(timer);
+      if (temporaryInput) await unlink(temporaryInput).catch(() => undefined);
       if (stopped && !streaming) return reject(new Error('CLI runtime/output limit reached. Check account status before retrying a write.'));
       if (code !== 0 && !stopped) return reject(new Error(`Kraken CLI exited ${code}: ${redact(stderr || stdout).slice(-2000)}`));
       const clean = redact(stdout).trim();
