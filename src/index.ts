@@ -4,6 +4,7 @@ import { executeCli, CliCommand, advancedCliCommand } from './cli';
 import { pollHistory, PollState } from './poll';
 import endpoints from './endpoints.json';
 import catalog from './catalog.json';
+import krakenLogo from './assets/kraken.png';
 import { actionFields, fieldProperty, fieldLabel, nativeParams, inputSchemas, FieldSchema, normalizeField } from './forms';
 
 const secret = (displayName: string) => PieceAuth.SecretText({ displayName, required: false });
@@ -237,7 +238,7 @@ const historyTriggers = [
 
 export const kraken = createPiece({
   displayName: 'Kraken', description: 'Kraken Spot and Futures: market data, trading, balances, funding, Earn, subaccounts, exports, polling triggers and the official CLI including paper trading and bounded WebSocket streams.',
-  logoUrl: 'https://assets.kraken.com/marketing/web/icons/favicon.png',
+  logoUrl: krakenLogo,
   authors: [], auth: krakenAuth, minimumSupportedRelease: '0.82.0',
   actions: [...nativeActions, customSpot, customFutures, ...cliActions, advancedCliAction], triggers: historyTriggers,
 });

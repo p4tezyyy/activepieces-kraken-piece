@@ -1,5 +1,9 @@
 # Third-party notices
 
+The Kraken icon is sourced from the Kraken Developers site's published favicon:
+https://docs.kraken.com/mintlify-assets/_mintlify/favicons/kraken/WtiP_7MUCtGxw5vL/_generated/favicon/android-chrome-192x192.png
+It is included to identify the service. Kraken trademarks belong to their respective owner.
+
 This is an independent integration, not an official Kraken or Activepieces product.
 
 The command catalogue is derived from `krakenfx/kraken-cli`, CLI version 0.4.1,

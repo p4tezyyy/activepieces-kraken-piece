@@ -1,6 +1,6 @@
 {
   "name": "activepieces-piece-kraken",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Kraken Spot, Futures, funding, Earn, subaccounts and official CLI automation for Activepieces.",
   "main": "./dist/src/index.js",
   "scripts": {
