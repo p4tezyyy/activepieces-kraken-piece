@@ -1,0 +1,6 @@
+node_modules
+.git
+.env
+work/kraken-cli
+work/*.json
+*.tgz

@@ -1,0 +1,41 @@
+name: kraken-activepieces-test
+services:
+  activepieces:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: activepieces
+    image: kraken-activepieces-test:local
+    ports:
+      - "127.0.0.1:8088:80"
+    environment:
+      AP_DB_TYPE: PGLITE
+      AP_REDIS_TYPE: MEMORY
+      AP_FRONTEND_URL: http://localhost:8088
+      AP_INTERNAL_URL: http://127.0.0.1:80
+      AP_EXECUTION_MODE: UNSANDBOXED
+      AP_SANDBOX_PROPAGATED_ENV_VARS: KRAKEN_CLI_BRIDGE_URL,KRAKEN_CLI_BRIDGE_TOKEN
+      AP_TELEMETRY_ENABLED: "false"
+      AP_TEMPLATES_SOURCE_URL: ""
+      AP_JWT_SECRET: ${AP_JWT_SECRET:?Run scripts/setup-env.cjs first}
+      AP_ENCRYPTION_KEY: ${AP_ENCRYPTION_KEY:?Run scripts/setup-env.cjs first}
+      KRAKEN_CLI_BRIDGE_URL: http://kraken-cli:8787
+      KRAKEN_CLI_BRIDGE_TOKEN: ${KRAKEN_CLI_BRIDGE_TOKEN:?Run scripts/setup-env.cjs first}
+    volumes:
+      - activepieces_data:/root/.activepieces
+    restart: unless-stopped
+    depends_on:
+      - kraken-cli
+  kraken-cli:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: cli
+    environment:
+      KRAKEN_CLI_BRIDGE_TOKEN: ${KRAKEN_CLI_BRIDGE_TOKEN:?Run scripts/setup-env.cjs first}
+    volumes:
+      - kraken_cli_data:/var/lib/kraken-piece
+    restart: unless-stopped
+volumes:
+  activepieces_data:
+  kraken_cli_data:

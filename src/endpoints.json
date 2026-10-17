@@ -1,0 +1,1184 @@
+[
+  {
+    "name": "Server Time",
+    "endpoint": "Time",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "System Status",
+    "endpoint": "SystemStatus",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Assets",
+    "endpoint": "Assets",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [
+      "asset"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Trading Pairs",
+    "endpoint": "AssetPairs",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [
+      "pair"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Ticker",
+    "endpoint": "Ticker",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [
+      "pair"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Candles",
+    "endpoint": "OHLC",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [
+      "pair",
+      "interval",
+      "since"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Order Book",
+    "endpoint": "Depth",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [
+      "pair",
+      "count"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Grouped Order Book",
+    "endpoint": "GroupedBook",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [
+      "pair",
+      "depth",
+      "grouping"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Recent Trades",
+    "endpoint": "Trades",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [
+      "pair",
+      "since",
+      "count"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Recent Spreads",
+    "endpoint": "Spread",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [
+      "pair",
+      "since"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Balance",
+    "endpoint": "Balance",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Extended Balance",
+    "endpoint": "BalanceEx",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Trade Balance",
+    "endpoint": "TradeBalance",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "asset"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Credit Lines",
+    "endpoint": "CreditLines",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Open Orders",
+    "endpoint": "OpenOrders",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Closed Orders",
+    "endpoint": "ClosedOrders",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "start",
+      "end",
+      "ofs"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Order Details",
+    "endpoint": "QueryOrders",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "txid"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Trade History",
+    "endpoint": "TradesHistory",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "start",
+      "end",
+      "ofs"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Trade Details",
+    "endpoint": "QueryTrades",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "txid"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Open Positions",
+    "endpoint": "OpenPositions",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Ledger History",
+    "endpoint": "Ledgers",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "asset",
+      "start",
+      "end",
+      "ofs"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Ledger Details",
+    "endpoint": "QueryLedgers",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "id"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Trading Volume and Fees",
+    "endpoint": "TradeVolume",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "pair"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "API Key Info",
+    "endpoint": "GetApiKeyInfo",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "WebSocket Token",
+    "endpoint": "GetWebSocketsToken",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Level 3 Order Book",
+    "endpoint": "Level3",
+    "private": true,
+    "write": false,
+    "json": true,
+    "fields": [
+      "pair",
+      "depth"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Order Amend History",
+    "endpoint": "OrderAmends",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "txid"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Export Status",
+    "endpoint": "ExportStatus",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "report"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Place Order",
+    "endpoint": "AddOrder",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "pair",
+      "type",
+      "ordertype",
+      "volume",
+      "price",
+      "price2",
+      "leverage",
+      "cl_ord_id"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Amend Order",
+    "endpoint": "AmendOrder",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "txid",
+      "order_qty",
+      "limit_price",
+      "trigger_price"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Edit Order",
+    "endpoint": "EditOrder",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "txid",
+      "pair",
+      "volume",
+      "price"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Cancel Order",
+    "endpoint": "CancelOrder",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "txid"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Cancel All Orders",
+    "endpoint": "CancelAll",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Cancel All Orders After",
+    "endpoint": "CancelAllOrdersAfter",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "timeout"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Place Batch Orders",
+    "endpoint": "AddOrderBatch",
+    "private": true,
+    "write": true,
+    "json": true,
+    "fields": [
+      "pair"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Cancel Batch Orders",
+    "endpoint": "CancelOrderBatch",
+    "private": true,
+    "write": true,
+    "json": true,
+    "fields": [],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Request Export",
+    "endpoint": "AddExport",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "report",
+      "description",
+      "format",
+      "starttm",
+      "endtm"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Delete Export",
+    "endpoint": "RemoveExport",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "id",
+      "type"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Validate Order",
+    "endpoint": "AddOrder",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "pair",
+      "type",
+      "ordertype",
+      "volume",
+      "price",
+      "price2",
+      "leverage"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Retrieve Export",
+    "endpoint": "RetrieveExport",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "id"
+    ],
+    "binary": true,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Deposit Methods",
+    "endpoint": "DepositMethods",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "asset"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Deposit Addresses",
+    "endpoint": "DepositAddresses",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "asset",
+      "method"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Deposit History",
+    "endpoint": "DepositStatus",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "asset",
+      "method"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Create Deposit Address",
+    "endpoint": "DepositAddresses",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "asset",
+      "method"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Withdrawal Methods",
+    "endpoint": "WithdrawMethods",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "asset"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Withdrawal Addresses",
+    "endpoint": "WithdrawAddresses",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "asset",
+      "method"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Withdrawal Fees and Limits",
+    "endpoint": "WithdrawInfo",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "asset",
+      "key",
+      "amount"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Withdrawal History",
+    "endpoint": "WithdrawStatus",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "asset"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Withdraw Funds",
+    "endpoint": "Withdraw",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "asset",
+      "key",
+      "amount"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Cancel Withdrawal",
+    "endpoint": "WithdrawCancel",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "asset",
+      "refid"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Transfer Between Wallets",
+    "endpoint": "WalletTransfer",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "asset",
+      "amount",
+      "from",
+      "to"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Earn Strategies",
+    "endpoint": "Earn/Strategies",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "asset",
+      "cursor",
+      "limit"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Earn Allocations",
+    "endpoint": "Earn/Allocations",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Earn Allocate",
+    "endpoint": "Earn/Allocate",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "strategy_id",
+      "amount"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Earn Deallocate",
+    "endpoint": "Earn/Deallocate",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "strategy_id",
+      "amount"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Earn Allocation Status",
+    "endpoint": "Earn/AllocateStatus",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "strategy_id"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Earn Deallocation Status",
+    "endpoint": "Earn/DeallocateStatus",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "strategy_id"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Create Subaccount",
+    "endpoint": "CreateSubaccount",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "username",
+      "email"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Transfer Between Accounts",
+    "endpoint": "AccountTransfer",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "asset",
+      "amount",
+      "from",
+      "to"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "spot"
+  },
+  {
+    "name": "Instruments",
+    "endpoint": "instruments",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Tickers",
+    "endpoint": "tickers",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Order Book",
+    "endpoint": "orderbook",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [
+      "symbol"
+    ],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Recent Trades",
+    "endpoint": "history",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [
+      "symbol"
+    ],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Fee Schedules",
+    "endpoint": "feeschedules",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Instrument Status",
+    "endpoint": "instruments/status",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Funding Rates",
+    "endpoint": "historical-funding-rates",
+    "private": false,
+    "write": false,
+    "json": false,
+    "fields": [
+      "symbol"
+    ],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Accounts",
+    "endpoint": "accounts",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Open Orders",
+    "endpoint": "openorders",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Positions",
+    "endpoint": "openpositions",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Fills",
+    "endpoint": "fills",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Order Status",
+    "endpoint": "orders/status",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "POST",
+    "family": "futures"
+  },
+  {
+    "name": "Place Order",
+    "endpoint": "sendorder",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "orderType",
+      "symbol",
+      "side",
+      "size",
+      "limitPrice",
+      "stopPrice",
+      "cliOrdId"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "futures"
+  },
+  {
+    "name": "Edit Order",
+    "endpoint": "editorder",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "orderId",
+      "size",
+      "limitPrice",
+      "stopPrice"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "futures"
+  },
+  {
+    "name": "Cancel Order",
+    "endpoint": "cancelorder",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "order_id"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "futures"
+  },
+  {
+    "name": "Cancel All Orders",
+    "endpoint": "cancelallorders",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "symbol"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "futures"
+  },
+  {
+    "name": "Cancel All Orders After",
+    "endpoint": "cancelallordersafter",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "timeout"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "futures"
+  },
+  {
+    "name": "Batch Orders",
+    "endpoint": "batchorder",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "POST",
+    "family": "futures"
+  },
+  {
+    "name": "Leverage Preferences",
+    "endpoint": "leveragepreferences",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [
+      "symbol"
+    ],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Set Leverage",
+    "endpoint": "leveragepreferences",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "symbol",
+      "maxLeverage"
+    ],
+    "binary": false,
+    "method": "PUT",
+    "family": "futures"
+  },
+  {
+    "name": "PnL Preferences",
+    "endpoint": "pnlpreferences",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Set PnL Preference",
+    "endpoint": "pnlpreferences",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "symbol",
+      "preference"
+    ],
+    "binary": false,
+    "method": "PUT",
+    "family": "futures"
+  },
+  {
+    "name": "Notifications",
+    "endpoint": "notifications",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Transfers",
+    "endpoint": "transfers",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Transfer Funds",
+    "endpoint": "transfer",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [
+      "amount",
+      "currency",
+      "sourceAccount",
+      "targetAccount"
+    ],
+    "binary": false,
+    "method": "POST",
+    "family": "futures"
+  },
+  {
+    "name": "Withdraw Funds",
+    "endpoint": "withdrawal",
+    "private": true,
+    "write": true,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "POST",
+    "family": "futures"
+  },
+  {
+    "name": "Unwind Queue",
+    "endpoint": "unwindqueue",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Assignment Programs",
+    "endpoint": "assignmentprogram/current",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Fee Schedule Volumes",
+    "endpoint": "feeschedules/volumes",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Subaccounts",
+    "endpoint": "subaccounts",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  },
+  {
+    "name": "Trading Instruments",
+    "endpoint": "trading/instruments",
+    "private": true,
+    "write": false,
+    "json": false,
+    "fields": [],
+    "binary": false,
+    "method": "GET",
+    "family": "futures"
+  }
+]

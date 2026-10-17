@@ -1,0 +1,54 @@
+{
+  "name": "activepieces-piece-kraken",
+  "version": "0.1.2",
+  "description": "Kraken Spot, Futures, funding, Earn, subaccounts and official CLI automation for Activepieces.",
+  "main": "./dist/src/index.js",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test tests/*.test.cjs",
+    "test:live": "node scripts/live-smoke.cjs",
+    "pack:piece": "npm run test && npm pack",
+    "prepublishOnly": "npm run test",
+    "docker:setup": "node scripts/setup-env.cjs",
+    "docker:install": "node scripts/docker-install.cjs",
+    "docker:test": "node scripts/docker-flow-smoke.cjs",
+    "docker:test:cli": "node scripts/docker-cli-smoke.cjs"
+  },
+  "keywords": [
+    "activepieces",
+    "piece",
+    "kraken",
+    "crypto",
+    "futures",
+    "automation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "26.6.5",
+    "esbuild": "0.28.2",
+    "typescript": "7.0.2",
+    "@activepieces/pieces-framework": "0.32.0"
+  },
+  "types": "./dist/types/index.d.ts",
+  "files": [
+    "dist/src",
+    "dist/types",
+    "README.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {},
+  "overrides": {
+    "expr-eval": "npm:expr-eval-fork@3.0.3",
+    "deepmerge-ts": "8.0.2",
+    "nanoid": "3.3.18",
+    "ai": "6.0.214",
+    "@ai-sdk/provider-utils": "4.0.33"
+  }
+}
